@@ -22,8 +22,20 @@
     return true;
   };
 
+  // Susunan bab mengikuti LED: A, B, lalu C. Kriteria dengan anak C.1–C.6, lalu D. Suplemen
+  const bab = (k) => {
+    if (k.id === 'profil')
+      return k.butir.map((b) => ({
+        ...k, id: `profil-${b.kode}`, nama: b.kode === 'A' ? 'A. Kondisi Eksternal' : 'B. Profil UPPS', butir: [b], alur: [], bobot: b.bobot,
+      }));
+    if (k.id === 'suplemen') return [{ ...k, nama: `D. ${k.nama}` }];
+    return [{ ...k, nama: `C.${k.id.slice(1)} ${k.nama}`, anak: true }];
+  };
+  let bobotC = $derived(jenjang.kriteria.filter((k) => /^k\d$/.test(k.id)).reduce((t, k) => t + k.bobot, 0));
+
   let groups = $derived(
     jenjang.kriteria
+      .flatMap(bab)
       .map((k) => {
         const sub =
           urut === 'alur' && k.alur.length
@@ -36,7 +48,7 @@
   let current = $derived(jenjang.butir.find((b) => b.no === selected) || null);
   let idx = $derived(current ? jenjang.butir.indexOf(current) : -1);
 
-  // ← → pindah butir (juga bekerja dengan clicker presentasi yang mengirim tombol panah)
+  // ← → pindah butir
   function onkeydown(e) {
     if (!current || e.altKey || e.ctrlKey || e.metaKey) return;
     if (e.target.closest?.('input, select, textarea, [contenteditable]')) return;
@@ -73,8 +85,11 @@
         <button class:on={urut === 'alur'} onclick={() => (urut = 'alur')}>Per alur PPEPP</button>
       </div>
     </div>
-    {#each groups as k}
-      <div class="group">
+    {#each groups as k, i}
+      {#if k.anak && !groups[i - 1]?.anak}
+        <div class="ghead induk"><span>C. Kriteria</span><span class="mono">{fmt(bobotC)}</span></div>
+      {/if}
+      <div class="group" class:anak={k.anak}>
         <div class="ghead"><span>{k.nama}</span><span class="mono">{fmt(k.bobot)}</span></div>
         {#each k.sub as s}
           {#if s.judul}<div class="shead">{s.judul}</div>{/if}
@@ -156,6 +171,9 @@
     font-weight: 600; font-size: 1rem; border-bottom: 1px solid var(--border);
   }
   .ghead .mono { font-size: 0.8rem; color: var(--muted); font-weight: 400; }
+  .ghead.induk { border-bottom-color: var(--text); }
+  .group.anak { margin-left: 12px; padding-left: 10px; border-left: 1px solid var(--border); }
+  .group.anak .ghead { font-size: 0.95rem; padding-top: 12px; }
   .shead { font-size: 0.78rem; color: var(--muted); padding: 10px 8px 2px 0; }
   .item {
     display: grid; grid-template-columns: 52px 1fr auto; gap: 8px; align-items: start;
@@ -179,11 +197,6 @@
   .intro h3 { margin-top: 24px; }
   .legend { display: grid; grid-template-columns: 40px 1fr; gap: 4px 8px; margin: 0; }
   .legend dd { margin: 0; }
-  /* Mode presentasi: butir yang dibuka memakai lebar penuh, daftar butir disembunyikan */
-  :global(html[data-present]) .layout.has-detail { grid-template-columns: 1fr; }
-  :global(html[data-present]) .layout.has-detail .list { display: none; }
-  :global(html[data-present]) .layout.has-detail .back { display: inline-block; }
-  :global(html[data-present]) .list { position: static; max-height: none; }
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
     .list { position: static; max-height: none; border-right: 0; padding-right: 0; }

@@ -63,12 +63,6 @@ body {
 /* Zoom (tombol / Ctrl+scroll) mengalikan ukuran dasar; semua ukuran berbasis rem ikut berubah */
 html { font-size: calc(100% * var(--zoom, 1)); }
 
-/* Mode presentasi: ukuran dasar lebih besar agar terbaca dari belakang ruangan */
-html[data-present] { font-size: calc(20px * var(--zoom, 1)); }
-html[data-present] .container { max-width: 1500px; padding: 0 32px; }
-html[data-present] .no-present { display: none !important; }
-@media (max-width: 900px) { html[data-present] { font-size: calc(17px * var(--zoom, 1)); } }
-
 a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
 a:hover { text-decoration-color: currentColor; }
 

@@ -4,6 +4,7 @@
   import { route, href } from '../lib/router.svelte.js';
   import { TAHAP } from '../lib/parse.js';
   import { untrack } from 'svelte';
+  import { eksporXlsx } from '../lib/xlsx.js';
 
   let { jenjang } = $props();
 
@@ -110,6 +111,16 @@
     a.click();
     URL.revokeObjectURL(a.href);
   }
+  let mengekspor = $state(false);
+  async function unduhXlsx() {
+    mengekspor = true;
+    try {
+      await eksporXlsx(jenjang, skor, { nama: nama.trim(), normalisasi });
+    } catch {
+      info = 'Gagal membuat file Excel.';
+    }
+    mengekspor = false;
+  }
   async function impor(e) {
     const f = e.currentTarget.files[0];
     if (!f) return;
@@ -174,7 +185,8 @@
         <button class="btn" onclick={() => isiSemua(3)}>Isi semua 3</button>
         <button class="btn" onclick={() => isiSemua(4)}>Isi semua 4</button>
         <button class="btn" onclick={() => { reset(); nama = ''; info = ''; }}>Kosongkan</button>
-        <button class="btn" onclick={ekspor}>Ekspor</button>
+        <button class="btn" onclick={unduhXlsx} disabled={mengekspor} title="Unduh hasil perhitungan sebagai file Excel">{mengekspor ? 'Menyiapkan…' : 'Ekspor Excel'}</button>
+        <button class="btn" onclick={ekspor} title="Unduh skor sebagai JSON untuk diimpor kembali">Ekspor JSON</button>
         <label class="btn">Impor<input type="file" accept="application/json" onchange={impor} hidden /></label>
         <button class="btn" onclick={() => print()}>Cetak</button>
       </div>

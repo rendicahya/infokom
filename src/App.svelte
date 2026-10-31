@@ -31,15 +31,6 @@
     try { localStorage.setItem('theme', theme); } catch {}
   }
 
-  let present = $state('present' in document.documentElement.dataset);
-
-  function gantiPresent() {
-    present = !present;
-    if (present) document.documentElement.dataset.present = '';
-    else delete document.documentElement.dataset.present;
-    try { localStorage.setItem('present', present ? '1' : '0'); } catch {}
-  }
-
   // Zoom 70–200%, langkah 10%; nilai awal dipasang oleh skrip di index.html
   const ZMIN = 0.7, ZMAX = 2;
   let zoom = $state(+getComputedStyle(document.documentElement).getPropertyValue('--zoom') || 1);
@@ -95,9 +86,6 @@
       <button onclick={() => bagi.buka()} title="Bagikan tautan dan QR code aplikasi" aria-label="Bagikan">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><path d="M14 14h3v3h-3zM20 14v1M14 20h1M17 17h4v4h-4" /></svg>
       </button>
-      <button onclick={gantiPresent} class:on={present} aria-pressed={present} title="Mode presentasi: huruf besar, daftar butir disembunyikan, ← → untuk pindah butir" aria-label="Mode presentasi">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1" /><path d="M12 16v4M8 20h8" /></svg>
-      </button>
       <button onclick={gantiTema} title={theme === 'dark' ? 'Mode terang' : 'Mode gelap'} aria-label={theme === 'dark' ? 'Mode terang' : 'Mode gelap'}>
         {#if theme === 'dark'}
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
@@ -141,7 +129,7 @@
   {/if}
 </main>
 
-<footer class="container no-print no-present">
+<footer class="container no-print">
   <p>
     Disusun dari Instrumen LED dan Matriks Penilaian Kinerja Program Studi LAM INFOKOM 2.1 (2025). Contoh narasi bersifat
     ilustratif. Bukan situs resmi LAM INFOKOM; selalu rujuk dokumen asli.
@@ -173,9 +161,11 @@
   .jenjang a { padding: 3px 10px; color: var(--muted); font-size: 0.9rem; text-decoration: none; border: 1px solid transparent; border-radius: var(--radius); }
   .jenjang a:hover { color: var(--text); }
   .jenjang a.active { color: var(--text); border-color: var(--text); font-weight: 600; }
-  .tabs { display: flex; gap: 22px; overflow-x: auto; border-top: 1px solid var(--border); }
+  /* Geser horizontal di layar sempit tanpa menampilkan scrollbar */
+  .tabs { display: flex; gap: 22px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border-top: 1px solid var(--border); }
+  .tabs::-webkit-scrollbar { display: none; }
   .tabs a {
-    padding: 9px 0 8px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px;
+    padding: 9px 0 8px; color: var(--muted); border-bottom: 2px solid transparent;
     white-space: nowrap; font-size: 0.92rem; text-decoration: none;
   }
   .tabs a:hover { color: var(--text); }
