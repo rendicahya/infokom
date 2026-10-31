@@ -1,19 +1,26 @@
 <script>
   import { fmt } from '../lib/data.js';
   import { hitung, AMBANG, MIN_BUTIR, MIN_RERATA } from '../lib/score.js';
-  import { href } from '../lib/router.svelte.js';
+  import { route, href } from '../lib/router.svelte.js';
   import { TAHAP } from '../lib/parse.js';
+  import { untrack } from 'svelte';
 
   let { jenjang } = $props();
 
   // Komponen ini di-remount per jenjang ({#key} di App), jadi nilai awal jenjang cukup.
   // svelte-ignore state_referenced_locally
   const KEY = `led-skor-${jenjang.id}`;
-  const load = () => {
-    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; }
+  // svelte-ignore state_referenced_locally
+  const KEY_SIMPAN = `led-simpan-${jenjang.id}`;
+  const load = (key, awal) => {
+    try { return JSON.parse(localStorage.getItem(key)) || awal; } catch { return awal; }
   };
 
-  let skor = $state(load());
+  let skor = $state(load(KEY, {}));
+  let simpanan = $state(load(KEY_SIMPAN, []));
+  let nama = $state('');
+  let info = $state('');
+  let tersalin = $state(false);
   let normalisasi = $state(false);
   let tampilan = $state('daftar');
   let hasil = $derived(hitung(jenjang, skor, { normalisasi }));
@@ -22,6 +29,67 @@
   $effect(() => {
     const data = JSON.stringify(skor);
     try { localStorage.setItem(KEY, data); } catch {}
+  });
+  $effect(() => {
+    const data = JSON.stringify(simpanan);
+    try { localStorage.setItem(KEY_SIMPAN, data); } catch {}
+  });
+
+  const waktu = (t) => new Date(t).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+
+  function simpan(n = nama.trim() || `Perhitungan ${waktu(Date.now())}`, data = skor) {
+    const item = { nama: n, skor: { ...data }, waktu: Date.now() };
+    const i = simpanan.findIndex((s) => s.nama === n);
+    if (i >= 0) simpanan.splice(i, 1);
+    simpanan.unshift(item);
+    return n;
+  }
+  function muat(s) {
+    reset();
+    for (const [k, v] of Object.entries(s.skor)) set(k, v);
+    nama = s.nama;
+    info = '';
+  }
+
+  // Tautan berbagi: skor diurutkan sesuai urutan butir, dipisah "_", kosong = belum diisi.
+  // Contoh: #/sarjana/kalkulator?n=Simulasi&s=4_3_3.5__2
+  function kodekan() {
+    const a = jenjang.butir.map((b) => skor[b.no] ?? '');
+    while (a.length && a.at(-1) === '') a.pop();
+    return a.join('_');
+  }
+  async function bagikan() {
+    const q = new URLSearchParams();
+    if (nama.trim()) q.set('n', nama.trim());
+    q.set('s', kodekan());
+    const url = `${location.origin}${location.pathname}${href(jenjang.id, 'kalkulator')}?${q}`;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      info = `Salin tautan ini secara manual: ${url}`;
+      return;
+    }
+    tersalin = true;
+    setTimeout(() => (tersalin = false), 1500);
+  }
+
+  // Buka tautan berbagi: skor kerja sebelumnya disimpan dulu agar tidak hilang tertimpa
+  $effect(() => {
+    const s = route.query.s;
+    if (s == null) return;
+    const n = route.query.n || '';
+    untrack(() => {
+      const lama = { ...skor };
+      reset();
+      s.split('_').forEach((v, i) => jenjang.butir[i] && set(jenjang.butir[i].no, v));
+      const j = JSON.stringify(lama);
+      const aman = j === JSON.stringify({ ...skor }) || simpanan.some((x) => JSON.stringify(x.skor) === j);
+      const cadangan = Object.keys(lama).length && !aman ? simpan(`Sebelum membuka tautan · ${waktu(Date.now())}`, lama) : null;
+      nama = n;
+      info = `Skor dimuat dari tautan${n ? ` “${n}”` : ''}.` + (cadangan ? ` Skor Anda sebelumnya disimpan sebagai “${cadangan}”.` : '');
+    });
+    history.replaceState(null, '', location.pathname + location.search + href(jenjang.id, 'kalkulator'));
+    route.query = {};
   });
 
   function set(no, v) {
@@ -68,9 +136,35 @@
       <div class="label">Program {jenjang.nama}</div>
       <h1>Kalkulator nilai akhir</h1>
       <p class="muted small">
-        Masukkan skor 0–4 (boleh desimal) untuk setiap butir. Nilai akhir = Σ(bobot × skor) ÷ 4. Skor tersimpan otomatis di
-        peramban ini.
+        Masukkan skor 0–4 (boleh desimal) untuk setiap butir. Nilai akhir = Σ(bobot × skor) ÷ 4. Skor kerja tersimpan
+        otomatis di peramban ini; beri nama dan simpan untuk menyimpan beberapa skenario, atau salin tautan untuk dibagikan.
       </p>
+      <div class="simpan">
+        <input type="text" placeholder="Nama perhitungan, mis. Simulasi target 2026" bind:value={nama} aria-label="Nama perhitungan" />
+        <button class="btn primary" onclick={() => { nama = simpan(); info = `Tersimpan sebagai “${nama}”.`; }}>Simpan</button>
+        <button class="btn" onclick={bagikan} title="Salin tautan yang memuat semua skor ini">{tersalin ? 'Tautan tersalin' : 'Salin tautan'}</button>
+      </div>
+      {#if info}<p class="info small">{info}</p>{/if}
+      {#if simpanan.length}
+        <details class="daftar" open>
+          <summary class="small">Perhitungan tersimpan ({simpanan.length})</summary>
+          <table class="small">
+            <tbody>
+              {#each simpanan as s, i (s.nama)}
+                <tr class:aktif={s.nama === nama}>
+                  <td>{s.nama}</td>
+                  <td class="num mono">{fmt(hitung(jenjang, s.skor).nilaiAkhir)}</td>
+                  <td class="muted">{waktu(s.waktu)}</td>
+                  <td class="num aksi">
+                    <button class="link" onclick={() => muat(s)}>Muat</button>
+                    <button class="link hapus" onclick={() => simpanan.splice(i, 1)}>Hapus</button>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </details>
+      {/if}
       <div class="actions">
         <span class="seg" role="group" aria-label="Tampilan">
           <button class:on={tampilan === 'daftar'} onclick={() => (tampilan = 'daftar')}>Daftar</button>
@@ -79,7 +173,7 @@
         <span class="sp"></span>
         <button class="btn" onclick={() => isiSemua(3)}>Isi semua 3</button>
         <button class="btn" onclick={() => isiSemua(4)}>Isi semua 4</button>
-        <button class="btn" onclick={reset}>Kosongkan</button>
+        <button class="btn" onclick={() => { reset(); nama = ''; info = ''; }}>Kosongkan</button>
         <button class="btn" onclick={ekspor}>Ekspor</button>
         <label class="btn">Impor<input type="file" accept="application/json" onchange={impor} hidden /></label>
         <button class="btn" onclick={() => print()}>Cetak</button>
@@ -228,6 +322,16 @@
   .toolbar h1 { margin: 4px 0 6px; }
   .actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 12px; }
   .sp { flex: 1; }
+  .simpan { display: flex; gap: 6px; margin-top: 12px; }
+  .simpan input { flex: 1; min-width: 0; padding: 6px 9px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  .info { margin: 8px 0 0; padding: 6px 10px; border-left: 3px solid var(--accent); background: var(--accent-soft); overflow-wrap: anywhere; }
+  .daftar { margin-top: 10px; }
+  .daftar summary { cursor: pointer; color: var(--muted); }
+  .daftar td { padding: 5px 8px; vertical-align: middle; }
+  .daftar tr.aktif td:first-child { font-weight: 600; box-shadow: inset 2px 0 0 var(--accent); }
+  .daftar .aksi { white-space: nowrap; }
+  .link { border: 0; background: none; padding: 0 0 0 10px; cursor: pointer; color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  .link.hapus { color: var(--danger); }
   .seg { display: inline-flex; border: 1px solid var(--text); border-radius: var(--radius); overflow: hidden; }
   .seg button { border: 0; background: transparent; padding: 5px 11px; cursor: pointer; font-size: 0.88rem; color: var(--muted); }
   .seg button.on { background: var(--text); color: var(--bg); }
