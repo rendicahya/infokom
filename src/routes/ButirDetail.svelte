@@ -92,6 +92,20 @@
     <div class="unggul"><span class="label">Syarat Unggul · minimal skor 3,00</span><p>{butir.syaratUnggul}</p></div>
   {/if}
 
+  {#if narasi}
+    <section class="narasi">
+      <div class="nh">
+        <h3>Contoh narasi</h3>
+        <button class="btn small no-print" onclick={salin}>{copied ? 'Tersalin' : 'Salin teks'}</button>
+      </div>
+      <p class="muted small">
+        Ilustrasi untuk {jenjang.konteks.ps} FILKOM UB. Angka, nomor dokumen, dan nama mitra bersifat ilustratif, bukan data
+        resmi; ganti dengan data PS dan pastikan konsisten dengan LKPS.
+      </p>
+      <div class="ntext"><Md text={narasi} /></div>
+    </section>
+  {/if}
+
   <section>
     <h3>Rubrik skor</h3>
     {#if butir.tanpaRubrik}
@@ -110,20 +124,6 @@
       </div>
     {/if}
   </section>
-
-  {#if narasi}
-    <section class="narasi">
-      <div class="nh">
-        <h3>Contoh narasi</h3>
-        <button class="btn small no-print" onclick={salin}>{copied ? 'Tersalin' : 'Salin teks'}</button>
-      </div>
-      <p class="muted small">
-        Ilustrasi untuk {jenjang.konteks.ps} FILKOM UB. Angka, nomor dokumen, dan nama mitra bersifat ilustratif, bukan data
-        resmi; ganti dengan data PS dan pastikan konsisten dengan LKPS.
-      </p>
-      <div class="ntext"><Md text={narasi} /></div>
-    </section>
-  {/if}
 </article>
 
 <style>

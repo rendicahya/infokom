@@ -6,6 +6,9 @@
   import Butir from './routes/Butir.svelte';
   import Kalkulator from './routes/Kalkulator.svelte';
   import Rekap from './routes/Rekap.svelte';
+  import BagiDialog from './lib/BagiDialog.svelte';
+
+  let bagi;
 
   const PAGES = [
     { id: 'butir', label: 'Butir & Rubrik' },
@@ -89,6 +92,9 @@
       </button>
     </div>
     <div class="tools">
+      <button onclick={() => bagi.buka()} title="Bagikan tautan dan QR code aplikasi" aria-label="Bagikan">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><path d="M14 14h3v3h-3zM20 14v1M14 20h1M17 17h4v4h-4" /></svg>
+      </button>
       <button onclick={gantiPresent} class:on={present} aria-pressed={present} title="Mode presentasi: huruf besar, daftar butir disembunyikan, ← → untuk pindah butir" aria-label="Mode presentasi">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1" /><path d="M12 16v4M8 20h8" /></svg>
       </button>
@@ -118,6 +124,8 @@
     </nav>
   {/if}
 </header>
+
+<BagiDialog bind:this={bagi} />
 
 <main class="container">
   {#if !jenjang}
