@@ -1,4 +1,4 @@
-// Parser untuk file Matriks Penilaian dan Instrumen LED (format .md di root repo).
+// Parser untuk file Matriks Penilaian dan Instrumen LED (format .md di folder dokumen/).
 
 export const TAHAP = ['Penetapan', 'Pelaksanaan', 'Evaluasi', 'Pengendalian', 'Peningkatan'];
 export const JENIS = { I: 'Input', P: 'Proses', O: 'Output' };

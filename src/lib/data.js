@@ -1,9 +1,9 @@
-import matriksSarjana from '../../Matriks Penilaian Sarjana Unggul.md?raw';
-import matriksMagister from '../../Matriks Penilaian Magister Unggul.md?raw';
-import matriksDoktor from '../../Matriks Penilaian Doktor Unggul.md?raw';
-import ledSarjana from '../../Instrumen LED Sarjana Unggul.md?raw';
-import ledMagister from '../../Instrumen LED Magister Unggul.md?raw';
-import ledDoktor from '../../Instrumen LED Doktor Unggul.md?raw';
+import matriksSarjana from '../../dokumen/Matriks Penilaian Sarjana Unggul.md?raw';
+import matriksMagister from '../../dokumen/Matriks Penilaian Magister Unggul.md?raw';
+import matriksDoktor from '../../dokumen/Matriks Penilaian Doktor Unggul.md?raw';
+import ledSarjana from '../../dokumen/Instrumen LED Sarjana Unggul.md?raw';
+import ledMagister from '../../dokumen/Instrumen LED Magister Unggul.md?raw';
+import ledDoktor from '../../dokumen/Instrumen LED Doktor Unggul.md?raw';
 import { parseMatriks, parseLED, panduanUntukButir } from './parse.js';
 
 export const KRITERIA = [

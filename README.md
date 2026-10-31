@@ -9,7 +9,7 @@ Fitur:
 - **Kalkulator** — nilai akhir = Σ(bobot × skor) ÷ 4, status akreditasi, pengecekan syarat Unggul, dan potensi kenaikan nilai. Skor tersimpan di localStorage dan bisa diekspor/impor.
 - **Rekap Bobot** — bobot per kriteria, Input/Proses/Output, tahap PPEPP, dan perbandingan antarjenjang.
 
-Data dibaca langsung dari file `.md` di root repo (`Matriks Penilaian … Unggul.md` dan `Instrumen LED … Unggul.md`), jadi perubahan pada file tersebut otomatis tercermin di app. Contoh narasi ada di `src/lib/narasi.js` dan bersifat ilustratif.
+Data dibaca langsung dari file `.md` di folder `dokumen/` (`Matriks Penilaian … Unggul.md` dan `Instrumen LED … Unggul.md`), jadi perubahan pada file tersebut otomatis tercermin di app. Contoh narasi ada di `src/lib/narasi.js` dan bersifat ilustratif.
 
 ## Pengembangan
 
