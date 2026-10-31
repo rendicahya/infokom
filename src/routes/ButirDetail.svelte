@@ -64,7 +64,7 @@
         {/if}
       {:else}
         {#if butir.panduan.item}
-          <div class="focus"><b>{butir.huruf}.</b> <Md text={butir.panduan.item} /></div>
+          <div class="focus"><Md text={`**${butir.huruf}.** ${butir.panduan.item}`} /></div>
         {/if}
         <Md text={butir.panduan.intro} />
       {/if}
@@ -125,7 +125,6 @@
   .panduan { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; }
   .panduan h3 { margin-bottom: 2px; }
   .focus { background: var(--surface); border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
-  .focus :global(.prose) { display: inline; }
   .unggul { margin-top: 18px; padding: 10px 14px; border-left: 4px solid var(--ok); background: var(--o-soft); border-radius: 6px; }
   .rubrik { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
   .lvl { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 0.9rem; }
