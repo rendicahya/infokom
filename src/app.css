@@ -25,8 +25,8 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+/* data-theme diisi oleh skrip di index.html (pilihan tersimpan, atau preferensi sistem) */
+:root[data-theme='dark'] {
     --bg: #181715;
     --surface: #201e1b;
     --surface-2: #2a2824;
@@ -47,7 +47,6 @@
     --danger-soft: #3a1f1d;
     --ok: #8fc39b;
     color-scheme: dark;
-  }
 }
 
 * { box-sizing: border-box; }
