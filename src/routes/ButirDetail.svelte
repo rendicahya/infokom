@@ -118,8 +118,8 @@
         <button class="btn small no-print" onclick={salin}>{copied ? 'Tersalin' : 'Salin teks'}</button>
       </div>
       <p class="muted small">
-        Ilustrasi untuk {jenjang.konteks.ps} di institusi fiktif (FIK-UN). Ganti semua angka, nomor dokumen, dan nama dengan
-        data PS Anda; pastikan konsisten dengan LKPS.
+        Ilustrasi untuk {jenjang.konteks.ps} FILKOM UB. Angka, nomor dokumen, dan nama mitra bersifat ilustratif, bukan data
+        resmi; ganti dengan data PS dan pastikan konsisten dengan LKPS.
       </p>
       <div class="ntext"><Md text={narasi} /></div>
     </section>
@@ -146,7 +146,7 @@
   .unggul p { margin: 4px 0 0; }
   /* Garis antarsel dibentuk oleh gap 1px di atas latar warna border */
   .rubrik {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
     background: var(--border); border: 1px solid var(--border); border-radius: var(--radius);
   }
   .lvl { padding: 10px 14px; font-size: 0.9rem; background: var(--surface); }
@@ -159,4 +159,6 @@
   .narasi .nh { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
   .narasi .nh h3 { border: 0; margin: 0; }
   .ntext { font-family: var(--serif); font-size: 1.02rem; line-height: 1.65; padding: 4px 0 0 16px; border-left: 1px solid var(--border); }
-  select { padding: 3px 8px; margin-left: 6px; }</style>
+  select { padding: 3px 8px; margin-left: 6px; }
+  @media (max-width: 600px) { .rubrik { grid-template-columns: 1fr; } }
+</style>

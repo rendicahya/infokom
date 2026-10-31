@@ -1,35 +1,35 @@
-// Contoh narasi LED per butir. Semua nama institusi, nomor dokumen, dan angka bersifat ILUSTRATIF
-// (Fakultas Ilmu Komputer Universitas Nusantara / FIK-UN) dan harus diganti dengan data PS sendiri.
+// Contoh narasi LED per butir dengan konteks Fakultas Ilmu Komputer Universitas Brawijaya (FILKOM UB).
+// Nomor dokumen, angka, dan nama mitra bersifat ILUSTRATIF (bukan data resmi) dan harus diganti dengan data PS sendiri.
 // Narasi ditulis sebagai contoh yang mengarah ke skor 4: lengkap, terukur, berbukti, dan berkesinambungan PPEPP.
 
 const N = {
   // ===== Kondisi Eksternal & Profil =====
   1: (c) => `**Lingkungan makro.** Pertumbuhan ekonomi digital nasional (proyeksi Rp 2.000 triliun pada 2030), kebijakan Merdeka Belajar, serta Peta Jalan Indonesia Digital 2021–2024 meningkatkan kebutuhan talenta TIK. Laporan Kemnaker menunjukkan kekurangan ±600 ribu talenta digital per tahun. Perkembangan AI generatif dan keamanan siber menuntut kurikulum yang adaptif.
 
-**Lingkungan mikro.** Di provinsi kami terdapat 14 PS sejenis (5 terakreditasi Unggul) sebagai pesaing langsung. Data BPS mencatat 412 SMA/SMK dengan ±38.000 lulusan per tahun; 31% berminat di bidang TIK (survei FIK-UN 2024). Kemitraan dengan 42 mitra DUDIKA dan pemerintah daerah menjadi sumber tempat magang, dana, dan pengguna lulusan ${c.ps}.
+**Lingkungan mikro.** Di Jawa Timur terdapat 38 PS sejenis (9 terakreditasi Unggul) sebagai pesaing langsung, sebagian di Malang Raya. Data BPS mencatat 1.250 SMA/SMK di Jawa Timur dengan ±150.000 lulusan per tahun; 31% berminat di bidang TIK (survei FILKOM UB 2024). Kemitraan dengan 42 mitra DUDIKA serta Pemkot/Pemkab Malang Raya menjadi sumber tempat magang, dana, dan pengguna lulusan ${c.ps}.
 
-**Peluang dan ancaman.** Peluang: (1) program transformasi digital pemda, (2) skema MBKM dan hibah Kemdiktisaintek, (3) kebutuhan sertifikasi kompetensi. Ancaman: (1) kampus luar negeri yang membuka kelas daring, (2) bootcamp non-gelar, (3) persaingan perekrutan dosen bergelar doktor dengan industri. Analisis ini menjadi dasar Renstra FIK-UN 2025–2029 (bukti: Dokumen Analisis Lingkungan Strategis, SK Dekan No. 12/2025).`,
+**Peluang dan ancaman.** Peluang: (1) program transformasi digital pemda, (2) skema MBKM dan hibah Kemdiktisaintek, (3) kebutuhan sertifikasi kompetensi. Ancaman: (1) kampus luar negeri yang membuka kelas daring, (2) bootcamp non-gelar, (3) persaingan perekrutan dosen bergelar doktor dengan industri. Analisis ini menjadi dasar Renstra FILKOM UB 2025–2029 (bukti: Dokumen Analisis Lingkungan Strategis, SK Dekan No. 12/2025).`,
 
-  2: (c) => `${c.ps} berdiri tahun ${c.jenjang === 'Sarjana' ? '2002' : c.jenjang === 'Magister' ? '2010' : '2017'} di bawah FIK-UN dengan visi keilmuan *"menjadi pusat pengembangan kecerdasan buatan yang berdampak bagi masyarakat pada 2035"*. Struktur organisasi mengacu pada Statuta UN (PP No. xx/2020) dan OTK FIK-UN, dengan Gugus Jaminan Mutu di tingkat fakultas dan Unit Penjaminan Mutu di tingkat PS.
+  2: (c) => `${c.ps} diselenggarakan oleh FILKOM UB dengan visi keilmuan *"menjadi pusat pengembangan kecerdasan buatan yang berdampak bagi masyarakat pada 2035"*. Struktur organisasi mengacu pada Statuta UB sebagai PTN-BH dan OTK FILKOM UB, dengan Gugus Jaminan Mutu (GJM) di tingkat fakultas dan Unit Jaminan Mutu (UJM) di tingkat PS.
 
 Pada TS terdapat ${Math.round(620 * c.skala)} mahasiswa aktif, ${Math.round(28 * Math.max(c.skala, 0.5))} DTPR (${c.jenjang === 'Sarjana' ? '46%' : '100%'} bergelar doktor, 9 Lektor Kepala/Guru Besar), dan 18 tenaga kependidikan bersertifikat. Rasio dana operasional pendidikan mencapai Rp 21 juta/mahasiswa/tahun. SPMI telah berjalan lima siklus PPEPP dan memperoleh sertifikat ISO 21001:2018.
 
 Kinerja unggulan: IPK rata-rata lulusan 3,52, masa tunggu kerja 3,1 bulan, 62 publikasi bereputasi dalam tiga tahun terakhir. Analisis SWOT: kekuatan utama pada SDM riset AI; kelemahan pada rasio laboratorium terhadap mahasiswa; strategi SO yang dipilih adalah perluasan kerja sama riset industri. Data pada bagian ini konsisten dengan LKPS dan kriteria C.1–C.6.`,
 
   // ===== C.1 Budaya Mutu =====
-  3: (c) => `UPPS menetapkan sistem tata kelola melalui Statuta UN, Peraturan Rektor No. 5/2023 tentang OTK, dan Manual SPMI FIK-UN. Standar tata kelola dituangkan dalam 24 Standar Pendidikan Tinggi (SN-DIKTI ditambah 8 standar PT) beserta indikator terukur, misalnya: *"100% layanan administrasi akademik diselesaikan sesuai SLA"* dan *"serapan anggaran ≥ 95% per tahun"*.
+  3: (c) => `UPPS menetapkan sistem tata kelola melalui Statuta UB, Peraturan Rektor No. 5/2023 tentang OTK, dan Manual SPMI FILKOM UB. Standar tata kelola dituangkan dalam 24 Standar Pendidikan Tinggi (SN-DIKTI ditambah 8 standar PT) beserta indikator terukur, misalnya: *"100% layanan administrasi akademik diselesaikan sesuai SLA"* dan *"serapan anggaran ≥ 95% per tahun"*.
 
 Setiap area dilengkapi SOP yang disahkan Dekan: (1) **akademik** — 21 SOP (KRS, yudisium, cuti, RPL); (2) **keuangan** — 9 SOP (RKAT, pencairan, pertanggungjawaban); (3) **SDM** — 11 SOP (rekrutmen, BKD, studi lanjut, promosi jabatan); (4) **aspek lain** dalam siklus PPEPP — 7 SOP (audit mutu internal, RTM, survei kepuasan). Daftar dokumen beserta nomor SK dan tautan unduh disajikan pada Lampiran C.1-1.`,
 
-  4: (c) => `Kebijakan SPMI ditetapkan dalam Kebijakan SPMI UN (SK Rektor No. 88/2022) dan dijabarkan dalam Manual serta Standar SPMI FIK-UN. Fungsi SPMI dijalankan oleh Gugus Jaminan Mutu (GJM) fakultas dan Unit Jaminan Mutu (UJM) di ${c.ps}, ditetapkan dengan SK Dekan No. 21/2024.
+  4: (c) => `Kebijakan SPMI ditetapkan dalam Kebijakan SPMI UB (SK Rektor No. 88/2022) dan dijabarkan dalam Manual serta Standar SPMI FILKOM UB. Fungsi SPMI dijalankan oleh Gugus Jaminan Mutu (GJM) fakultas dan Unit Jaminan Mutu (UJM) di ${c.ps}, ditetapkan dengan SK Dekan No. 21/2024.
 
 Indikator kompetensi pelaksana ditetapkan: seluruh anggota GJM/UJM wajib bersertifikat auditor mutu internal dan mengikuti penyegaran minimal sekali per dua tahun. Pada TS, 12 dari 12 personel (100%) telah bersertifikat AMI, dan 3 di antaranya bersertifikat Lead Auditor ISO 9001. Bukti: SK penetapan, sertifikat pelatihan, dan matriks kompetensi personel SPMI (Lampiran C.1-2).`,
 
   5: (c) => `Implementasi tata kelola dipantau melalui dasbor kinerja fakultas. Pada TS: (1) **akademik** — 98,7% layanan selesai sesuai SLA (target 95%); (2) **keuangan** — serapan anggaran 96,4% dan laporan keuangan memperoleh opini WTP dari KAP independen; (3) **SDM** — 100% dosen mengisi BKD tepat waktu dan 5 dosen naik jabatan fungsional; (4) **aspek lain** — RTM dilaksanakan dua kali per tahun.
 
-Efektivitas ini didokumentasikan dalam Laporan Tahunan Dekan 2022–2024 dan Laporan Kinerja PS yang dipresentasikan dalam rapat senat fakultas. Seluruh bukti dapat ditelusuri melalui sistem arsip digital FIK-UN (Lampiran C.1-3).`,
+Efektivitas ini didokumentasikan dalam Laporan Tahunan Dekan 2022–2024 dan Laporan Kinerja PS yang dipresentasikan dalam rapat senat fakultas. Seluruh bukti dapat ditelusuri melalui sistem arsip digital FILKOM UB (Lampiran C.1-3).`,
 
-  6: (c) => `SPMI berjalan penuh dalam siklus PPEPP: penetapan standar (Januari), pelaksanaan (sepanjang tahun), AMI (Agustus), RTM (September), dan perbaikan standar (Desember). Dalam tiga tahun terakhir dilaksanakan 3 siklus AMI dengan cakupan 100% unit di FIK-UN.
+  6: (c) => `SPMI berjalan penuh dalam siklus PPEPP: penetapan standar (Januari), pelaksanaan (sepanjang tahun), AMI (Agustus), RTM (September), dan perbaikan standar (Desember). Dalam tiga tahun terakhir dilaksanakan 3 siklus AMI dengan cakupan 100% unit di FILKOM UB.
 
 Auditor berasal dari 12 personel bersertifikat dengan rotasi lintas unit untuk menjaga independensi. Indikator efektivitas tercapai: 92% temuan AMI ditutup sebelum siklus berikutnya (target 85%). Bukti: jadwal AMI, laporan AMI, notulen RTM, dan daftar tindakan koreksi (Lampiran C.1-4).`,
 
@@ -55,14 +55,14 @@ Untuk SDM SPMI, 7 auditor diikutsertakan pelatihan *risk-based auditing* (Mei TS
 
   11: (c) => `Berdasarkan siklus PPEPP, UPPS **menaikkan standar** tata kelola: SLA layanan akademik dipersingkat dari 3 hari menjadi 1 hari; target serapan anggaran dinaikkan dari 95% menjadi 97%; dan ditambahkan standar baru tentang tata kelola data (*data governance*) serta keamanan informasi berbasis ISO 27001.
 
-Peningkatan ditetapkan melalui SK Dekan No. 3/TS+1 tentang Revisi Standar FIK-UN dan tercantum dalam Renop 2025–2026. Dampaknya terlihat dari kenaikan indeks kepuasan tata kelola dari 3,41 menjadi 3,58 (Lampiran C.1-9).`,
+Peningkatan ditetapkan melalui SK Dekan No. 3/TS+1 tentang Revisi Standar FILKOM UB dan tercantum dalam Renop 2025–2026. Dampaknya terlihat dari kenaikan indeks kepuasan tata kelola dari 3,41 menjadi 3,58 (Lampiran C.1-9).`,
 
   12: (c) => `Fungsi SPMI ditingkatkan dengan (1) mengadopsi sistem informasi audit mutu (e-AMI) yang terintegrasi dengan dasbor indikator, (2) menambah standar kompetensi auditor (wajib *risk-based auditing* dan pelatihan ISO 21001), dan (3) memperluas benchmarking dengan dua PS terakreditasi internasional (ABET/ASIIN).
 
 Hasilnya, siklus AMI menjadi 30% lebih cepat, dan ${c.ps} menyiapkan akreditasi internasional pada TS+2. Peningkatan ini menunjukkan budaya mutu yang tidak berhenti pada pemenuhan, tetapi terus melampaui standar (Lampiran C.1-10).`,
 
   // ===== C.2 Relevansi Pendidikan =====
-  13: (c) => `UPPS menetapkan standar relevansi pendidikan pada Standar FIK-UN (SK Dekan No. 4/2023), antara lain:
+  13: (c) => `UPPS menetapkan standar relevansi pendidikan pada Standar FILKOM UB (SK Dekan No. 4/2023), antara lain:
 - **Sarana prasarana:** rasio komputer laboratorium : mahasiswa ≥ 1 : 4; bandwidth ≥ 1 Gbps; seluruh ruang aksesibel bagi difabel.
 - **DTPR:** rasio DTPR : mahasiswa ≤ 1 : ${c.jenjang === 'Sarjana' ? '25' : c.jenjang === 'Magister' ? '10' : '5'}; minimal ${c.jenjang === 'Sarjana' ? '50%' : '100%'} DTPR bergelar doktor.
 - **Pembiayaan:** dana operasional pendidikan ≥ Rp 20 juta/mahasiswa/tahun.
@@ -74,7 +74,7 @@ Bukti: dokumen standar, Peraturan Rektor tentang Penerimaan Mahasiswa Baru, dan 
 
 Penyusunan melibatkan pemangku kepentingan melalui *tracer study*, FGD dengan 12 mitra DUDIKA, asosiasi profesi, alumni, dan mahasiswa. Kebijakan menetapkan peninjauan kurikulum minimal setiap 4 tahun. Bukti: dokumen kurikulum, notulen FGD, dan matriks CPL–MK (Lampiran C.2-2).`,
 
-  15: (c) => `Kebijakan Akademik FIK-UN (SK Dekan No. 9/2023) mengatur fleksibilitas pembelajaran: (1) maksimal 30% pembelajaran daring/hibrida melalui LMS; (2) metode *case-based learning* (CBL) dan *project-based learning* (PBL) minimal 50% dari bobot penilaian MK; (3) *micro-credential* dan sertifikasi industri yang dapat direkognisi hingga 20 SKS; (4) RPL tipe A dan B${c.jenjang === 'Sarjana' ? '; (5) hak belajar 3 semester di luar PS (MBKM)' : ''}.
+  15: (c) => `Kebijakan Akademik FILKOM UB (SK Dekan No. 9/2023) mengatur fleksibilitas pembelajaran: (1) maksimal 30% pembelajaran daring/hibrida melalui LMS; (2) metode *case-based learning* (CBL) dan *project-based learning* (PBL) minimal 50% dari bobot penilaian MK; (3) *micro-credential* dan sertifikasi industri yang dapat direkognisi hingga 20 SKS; (4) RPL tipe A dan B${c.jenjang === 'Sarjana' ? '; (5) hak belajar 3 semester di luar PS (MBKM)' : ''}.
 
 Standar suasana akademik mewajibkan minimal 2 kuliah tamu per semester. Standar penilaian menetapkan rubrik terukur dan pemenuhan beban belajar ${c.jenjang === 'Sarjana' ? '144' : c.jenjang === 'Magister' ? '36' : '42'} SKS (Lampiran C.2-3).`,
 
@@ -158,13 +158,13 @@ Standar baru ditetapkan: minimal 20% mahasiswa memperoleh sertifikasi industri s
 UPPS juga memperluas jejaring alumni global sebagai mentor. Peningkatan ini dituangkan dalam revisi standar dan dipantau melalui dasbor *tracer study* daring yang diperbarui setiap semester (Lampiran C.2-20).`,
 
   // ===== C.3 Relevansi Penelitian =====
-  33: (c) => `Standar penelitian ${c.ps} (bagian dari Standar Penelitian UN) menetapkan: (1) sarana — akses laboratorium riset dan GPU server 24 jam; (2) DTPR — setiap DTPR memimpin minimal 1 penelitian per tahun; (3) pembiayaan — dana penelitian internal ≥ Rp 15 juta/DTPR/tahun; (4) **peta jalan penelitian** PS 2021–2030 dengan tiga topik payung: *trustworthy AI*, sistem cerdas untuk kesehatan, dan keamanan siber.
+  33: (c) => `Standar penelitian ${c.ps} (bagian dari Standar Penelitian UB) menetapkan: (1) sarana — akses laboratorium riset dan GPU server 24 jam; (2) DTPR — setiap DTPR memimpin minimal 1 penelitian per tahun; (3) pembiayaan — dana penelitian internal ≥ Rp 15 juta/DTPR/tahun; (4) **peta jalan penelitian** PS 2021–2030 dengan tiga topik payung: *trustworthy AI*, sistem cerdas untuk kesehatan, dan keamanan siber.
 
-Peta jalan diturunkan dari Rencana Induk Penelitian UN dan visi keilmuan PS. Bukti: Renip, dokumen peta jalan, dan SK kelompok riset (Lampiran C.3-1).`,
+Peta jalan diturunkan dari Rencana Induk Penelitian UB dan visi keilmuan PS. Bukti: Renip, dokumen peta jalan, dan SK kelompok riset (Lampiran C.3-1).`,
 
   34: (c) => `Kebijakan penelitian mewajibkan setiap penelitian DTPR berada dalam payung peta jalan dan **melibatkan mahasiswa**: minimal 1 ${c.mhsRiset} per penelitian, dan ${c.tugasAkhir} diarahkan menjadi bagian dari penelitian dosen.
 
-Topik ditetapkan berdasarkan visi misi UN, UPPS, visi keilmuan PS, dan kebutuhan masyarakat/DUDIKA hasil FGD dengan mitra rumah sakit, pemda, dan industri keamanan siber. Indikator: ≥ 70% penelitian DTPR melibatkan mahasiswa; ≥ 30% penelitian bermitra dengan DUDIKA (Lampiran C.3-2).`,
+Topik ditetapkan berdasarkan visi misi UB, UPPS, visi keilmuan PS, dan kebutuhan masyarakat/DUDIKA hasil FGD dengan mitra rumah sakit, pemda, dan industri keamanan siber. Indikator: ≥ 70% penelitian DTPR melibatkan mahasiswa; ≥ 30% penelitian bermitra dengan DUDIKA (Lampiran C.3-2).`,
 
   35: (c) => `Standar luaran penelitian menetapkan target per tahun: ≥ 40% DTPR memperoleh hibah eksternal; ≥ 5 kerja sama penelitian aktif; publikasi ≥ ${c.jenjang === 'Sarjana' ? '1' : c.jenjang === 'Magister' ? '1,5' : '2'} artikel/DTPR/tahun dengan ≥ 30% di jurnal internasional bereputasi (Q1–Q2); ≥ 5 HKI; dan keberlanjutan penelitian berupa hilirisasi atau penelitian lanjutan multi-tahun.
 
@@ -174,11 +174,11 @@ Kebijakan insentif publikasi dan HKI ditetapkan dalam Peraturan Rektor No. 14/20
 
 Seluruh penelitian dipetakan ke peta jalan: 46% *trustworthy AI*, 32% kesehatan cerdas, 22% keamanan siber. Bukti: Tabel LKPS penelitian DTPR dan laporan pemanfaatan laboratorium (Lampiran C.3-4).`,
 
-  37: (c) => `Implementasi peta jalan penelitian berjalan sesuai milestone. Dari ${Math.round(41 * Math.max(c.skala, 0.5))} penelitian, 83% melibatkan ${c.mhsRiset} (${Math.round(96 * c.skala) + 6} mahasiswa terlibat) dan 37% bermitra dengan DUDIKA, misalnya sistem triase berbasis AI bersama RSUD Kota dan deteksi *fraud* bersama bank daerah.
+  37: (c) => `Implementasi peta jalan penelitian berjalan sesuai milestone. Dari ${Math.round(41 * Math.max(c.skala, 0.5))} penelitian, 83% melibatkan ${c.mhsRiset} (${Math.round(96 * c.skala) + 6} mahasiswa terlibat) dan 37% bermitra dengan DUDIKA, misalnya sistem triase berbasis AI bersama rumah sakit mitra di Malang dan deteksi *fraud* bersama bank daerah Jawa Timur.
 
 Sebanyak ${c.jenjang === 'Sarjana' ? '41%' : '100%'} ${c.tugasAkhir} merupakan bagian dari penelitian DTPR. Bukti: Tabel LKPS penelitian yang melibatkan mahasiswa dan dokumen kerja sama (Lampiran C.3-5).`,
 
-  38: (c) => `Luaran penelitian tiga tahun terakhir: ${Math.round(18 * Math.max(c.skala, 0.5))} hibah eksternal (BIMA, LPDP RIIM, industri); 9 kerja sama penelitian aktif (3 internasional, antara lain dengan Universiti Malaya); ${Math.round(62 * Math.max(c.skala, 0.5))} publikasi bereputasi (24 di Q1–Q2), dan 14 HKI (2 paten sederhana).
+  38: (c) => `Luaran penelitian tiga tahun terakhir: ${Math.round(18 * Math.max(c.skala, 0.5))} hibah eksternal (BIMA, LPDP RIIM, industri); 9 kerja sama penelitian aktif (3 internasional, antara lain dengan universitas mitra di Malaysia); ${Math.round(62 * Math.max(c.skala, 0.5))} publikasi bereputasi (24 di Q1–Q2), dan 14 HKI (2 paten sederhana).
 
 Keberlanjutan: 3 hasil penelitian dihilirkan menjadi produk yang digunakan mitra, dan 5 penelitian berlanjut ke skema multi-tahun. Data rinci di Tabel LKPS publikasi dan luaran penelitian (Lampiran C.3-6).`,
 
@@ -214,16 +214,16 @@ Peningkatan disahkan melalui revisi standar penelitian dan Renip fakultas (Lampi
 
 Dampak: jumlah mahasiswa yang menjadi penulis bersama publikasi bereputasi meningkat 45% (Lampiran C.3-14).`,
 
-  47: (c) => `Standar luaran penelitian dinaikkan: publikasi Q1–Q2 ≥ 40%, minimal 2 hibah internasional per tahun, dan minimal 1 paten granted per dua tahun. Skema hilirisasi diperkuat melalui kerja sama dengan pusat inkubasi bisnis UN.
+  47: (c) => `Standar luaran penelitian dinaikkan: publikasi Q1–Q2 ≥ 40%, minimal 2 hibah internasional per tahun, dan minimal 1 paten granted per dua tahun. Skema hilirisasi diperkuat melalui kerja sama dengan pusat inkubasi bisnis UB.
 
 Keberlanjutan penelitian dijamin dengan model kelompok riset yang memiliki rencana pendanaan 5 tahun (Lampiran C.3-15).`,
 
   // ===== C.4 Relevansi PkM =====
-  48: (c) => `Standar PkM FIK-UN menetapkan: (1) sarana — Pusat Layanan TIK Masyarakat dan laboratorium yang dapat digunakan untuk pelatihan; (2) DTPR — setiap DTPR melaksanakan minimal 1 PkM per tahun; (3) pembiayaan — dana PkM ≥ Rp 7,5 juta/DTPR/tahun; (4) **peta jalan PkM** 2021–2030 berbasis layanan kepakaran: literasi digital UMKM, transformasi digital desa, dan keamanan siber sekolah.
+  48: (c) => `Standar PkM FILKOM UB menetapkan: (1) sarana — Pusat Layanan TIK Masyarakat dan laboratorium yang dapat digunakan untuk pelatihan; (2) DTPR — setiap DTPR melaksanakan minimal 1 PkM per tahun; (3) pembiayaan — dana PkM ≥ Rp 7,5 juta/DTPR/tahun; (4) **peta jalan PkM** 2021–2030 berbasis layanan kepakaran: literasi digital UMKM, transformasi digital desa, dan keamanan siber sekolah.
 
 Bukti: Renstra PkM, dokumen peta jalan, dan SK pusat layanan (Lampiran C.4-1).`,
 
-  49: (c) => `Kebijakan PkM mewajibkan setiap kegiatan sesuai peta jalan dan melibatkan minimal 2 mahasiswa. Topik ditetapkan berdasarkan visi misi UN, UPPS, keilmuan PS, serta kebutuhan masyarakat dan DUDIKA hasil *need assessment* bersama Dinas Kominfo dan Dinas Koperasi-UMKM.
+  49: (c) => `Kebijakan PkM mewajibkan setiap kegiatan sesuai peta jalan dan melibatkan minimal 2 mahasiswa. Topik ditetapkan berdasarkan visi misi UB, UPPS, keilmuan PS, serta kebutuhan masyarakat dan DUDIKA hasil *need assessment* bersama Dinas Kominfo dan Dinas Koperasi-UMKM.
 
 Indikator: ≥ 80% PkM melibatkan mahasiswa dan ≥ 50% PkM merupakan penerapan hasil penelitian (Lampiran C.4-2).`,
 
@@ -233,7 +233,7 @@ Indikator: ≥ 80% PkM melibatkan mahasiswa dan ≥ 50% PkM merupakan penerapan 
 
 Kegiatan sesuai peta jalan: 52% literasi digital UMKM, 30% transformasi digital desa, 18% keamanan siber sekolah. Bukti: Tabel LKPS PkM DTPR dan laporan kegiatan (Lampiran C.4-4).`,
 
-  52: (c) => `Implementasi peta jalan PkM melibatkan ${Math.round(110 * c.skala) + 8} mahasiswa dalam 88% kegiatan. Contoh: pengembangan aplikasi kasir dan pencatatan keuangan untuk 60 UMKM binaan bersama Dinas Koperasi; pendampingan 12 desa membangun situs desa. Sebanyak 55% PkM merupakan penerapan hasil penelitian DTPR (Lampiran C.4-5).`,
+  52: (c) => `Implementasi peta jalan PkM melibatkan ${Math.round(110 * c.skala) + 8} mahasiswa dalam 88% kegiatan. Contoh: pengembangan aplikasi kasir dan pencatatan keuangan untuk 60 UMKM binaan bersama Dinas Koperasi; pendampingan 12 desa di Kabupaten Malang membangun situs desa. Sebanyak 55% PkM merupakan penerapan hasil penelitian DTPR (Lampiran C.4-5).`,
 
   53: (c) => `Luaran PkM tiga tahun terakhir: 7 hibah PkM eksternal, 8 kerja sama aktif, 15 artikel di jurnal pengabdian (SINTA 2–4), 21 liputan media, dan 9 HKI hak cipta. Keberlanjutan: 3 desa binaan telah mandiri mengelola sistem informasi desa dan menjadi percontohan kabupaten (Lampiran C.4-6).`,
 
@@ -262,7 +262,7 @@ Akar masalah: proposal hibah PkM eksternal kurang menonjolkan dampak terukur, se
   62: (c) => `Standar luaran PkM dinaikkan: hibah eksternal ≥ 40% DTPR, minimal 1 diseminasi internasional per tahun, dan model keberlanjutan berupa mitra binaan yang mandiri dalam 3 tahun. Hasil PkM juga didorong menjadi produk ber-HKI yang dapat direplikasi daerah lain (Lampiran C.4-15).`,
 
   // ===== C.5 Akuntabilitas =====
-  63: (c) => `UPPS memiliki otonomi pengelolaan berdasarkan Statuta UN (PTN-BH/BLU) dengan kebijakan tata kelola yang transparan dan akuntabel: (1) RKAT disusun partisipatif dan dipublikasikan internal; (2) standar kapasitas sarana prasarana ditetapkan berbasis rasio kebutuhan; (3) standar SDM profesional mewajibkan sertifikasi dosen (serdos) dan sertifikasi kompetensi tendik.
+  63: (c) => `UPPS memiliki otonomi pengelolaan berdasarkan Statuta UB sebagai PTN-BH dengan kebijakan tata kelola yang transparan dan akuntabel: (1) RKAT disusun partisipatif dan dipublikasikan internal; (2) standar kapasitas sarana prasarana ditetapkan berbasis rasio kebutuhan; (3) standar SDM profesional mewajibkan sertifikasi dosen (serdos) dan sertifikasi kompetensi tendik.
 
 Indikator: 100% laporan keuangan diaudit; ≥ 90% dosen bersertifikat pendidik; ≥ 70% tendik bersertifikat kompetensi (Lampiran C.5-1).`,
 
@@ -285,13 +285,13 @@ Indikator: 100% laporan keuangan diaudit; ≥ 90% dosen bersertifikat pendidik; 
   72: (c) => `Audit mutu ditingkatkan dengan audit berbasis risiko dan audit keamanan informasi (ISO 27001) untuk sistem informasi akademik. Standar SDM profesional dinaikkan: 100% tendik bersertifikat kompetensi dan seluruh laboran memiliki sertifikasi K3 laboratorium (Lampiran C.5-10).`,
 
   // ===== C.6 Diferensiasi Misi =====
-  73: (c) => `VMTS ${c.ps} ditetapkan melalui SK Rektor No. 45/2021 dan selaras dengan visi UN dan FIK-UN. Visi keilmuan: *"Menjadi pusat pengembangan kecerdasan buatan yang terpercaya dan berdampak bagi kesehatan dan layanan publik pada 2035"*, sesuai kualifikasi KKNI level ${c.kkni}.
+  73: (c) => `VMTS ${c.ps} ditetapkan melalui SK Rektor No. 45/2021 dan selaras dengan visi UB dan FILKOM UB. Visi keilmuan: *"Menjadi pusat pengembangan kecerdasan buatan yang terpercaya dan berdampak bagi kesehatan dan layanan publik pada 2035"*, sesuai kualifikasi KKNI level ${c.kkni}.
 
 Rencana pengembangan strategis (Renstra 2021–2025) menetapkan ciri khas keilmuan "AI untuk kesehatan dan layanan publik" dengan indikator: ≥ 40% penelitian dan PkM pada topik khas, ≥ 3 kerja sama internasional, dan rekognisi oleh mitra DUDIKA di tingkat lokal, nasional, dan internasional (Lampiran C.6-1).`,
 
   74: (c) => `Ciri khas keilmuan dilaksanakan dalam tridarma: 4 MK khas AI untuk kesehatan; 52% penelitian dan 41% PkM pada topik khas; laboratorium AI Kesehatan bermitra dengan 3 rumah sakit.
 
-Rekognisi: sistem triase AI digunakan di RSUD Kota (lokal), penghargaan inovasi dari Kemenkes (nasional), dan kerja sama riset dengan Universiti Malaya (internasional). VMTS disosialisasikan melalui situs web, PKKMB, dan rapat kerja tahunan (Lampiran C.6-2).`,
+Rekognisi: sistem triase AI digunakan di rumah sakit mitra di Malang (lokal), penghargaan inovasi kesehatan digital tingkat nasional (nasional), dan kerja sama riset dengan universitas mitra di Malaysia (internasional). VMTS disosialisasikan melalui situs web, PKKMB, dan rapat kerja tahunan (Lampiran C.6-2).`,
 
   75: (c) => `Evaluasi ketercapaian Renstra dilakukan setiap tahun: 21 dari 24 indikator tercapai. Survei pemahaman VMTS (n = ${Math.round(520 * c.skala) + 50} dosen, tendik, mahasiswa) menunjukkan 91% responden memahami visi keilmuan PS.
 

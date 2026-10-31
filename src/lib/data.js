@@ -40,7 +40,7 @@ const ALUR_JUDUL = {
 // Konteks yang dipakai contoh narasi agar sesuai jenjang.
 const KONTEKS = {
   sarjana: {
-    jenjang: 'Sarjana', ps: 'PS Sarjana Informatika', kkni: 6, tugasAkhir: 'skripsi',
+    jenjang: 'Sarjana', ps: 'PS Sarjana Teknik Informatika', kkni: 6, tugasAkhir: 'skripsi',
     mhsRiset: 'mahasiswa tingkat akhir', masaStudi: '4 tahun', skala: 1,
   },
   magister: {

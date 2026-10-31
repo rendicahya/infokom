@@ -56,9 +56,15 @@ html, body { margin: 0; }
 body {
   background: var(--bg);
   color: var(--text);
-  font: 15.5px/1.6 var(--sans);
+  font: 0.97rem/1.6 var(--sans);
   -webkit-font-smoothing: antialiased;
 }
+
+/* Mode presentasi: semua ukuran berbasis rem ikut membesar agar terbaca dari belakang ruangan */
+html[data-present] { font-size: 20px; }
+html[data-present] .container { max-width: 1500px; padding: 0 32px; }
+html[data-present] .no-present { display: none !important; }
+@media (max-width: 900px) { html[data-present] { font-size: 17px; } }
 
 a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
 a:hover { text-decoration-color: currentColor; }

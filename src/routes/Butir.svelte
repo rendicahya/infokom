@@ -36,8 +36,20 @@
   let current = $derived(jenjang.butir.find((b) => b.no === selected) || null);
   let idx = $derived(current ? jenjang.butir.indexOf(current) : -1);
 
+  // ← → pindah butir (juga bekerja dengan clicker presentasi yang mengirim tombol panah)
+  function onkeydown(e) {
+    if (!current || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.target.closest?.('input, select, textarea, [contenteditable]')) return;
+    const to = e.key === 'ArrowRight' ? idx + 1 : e.key === 'ArrowLeft' ? idx - 1 : -1;
+    if (to < 0 || to >= jenjang.butir.length) return;
+    e.preventDefault();
+    location.hash = href(jenjang.id, 'butir', jenjang.butir[to].no);
+  }
+
   const ringkas = (b) => b.elemen.replace(/^\d\.\d\.?\s*\[[A-Z]+\]\s*/, '').replace(/^[A-D]\.\s*/, '').replace(/^\d\.\d\s*/, '');
 </script>
+
+<svelte:window {onkeydown} />
 
 <div class="layout" class:has-detail={!!current}>
   <aside class="list no-print">
@@ -167,6 +179,11 @@
   .intro h3 { margin-top: 24px; }
   .legend { display: grid; grid-template-columns: 40px 1fr; gap: 4px 8px; margin: 0; }
   .legend dd { margin: 0; }
+  /* Mode presentasi: butir yang dibuka memakai lebar penuh, daftar butir disembunyikan */
+  :global(html[data-present]) .layout.has-detail { grid-template-columns: 1fr; }
+  :global(html[data-present]) .layout.has-detail .list { display: none; }
+  :global(html[data-present]) .layout.has-detail .back { display: inline-block; }
+  :global(html[data-present]) .list { position: static; max-height: none; }
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
     .list { position: static; max-height: none; border-right: 0; padding-right: 0; }

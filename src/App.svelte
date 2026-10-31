@@ -28,6 +28,15 @@
     try { localStorage.setItem('theme', theme); } catch {}
   }
 
+  let present = $state('present' in document.documentElement.dataset);
+
+  function gantiPresent() {
+    present = !present;
+    if (present) document.documentElement.dataset.present = '';
+    else delete document.documentElement.dataset.present;
+    try { localStorage.setItem('present', present ? '1' : '0'); } catch {}
+  }
+
   function gantiFull() {
     if (document.fullscreenElement) document.exitFullscreen();
     else document.documentElement.requestFullscreen().catch(() => {});
@@ -47,6 +56,9 @@
       {/each}
     </nav>
     <div class="tools">
+      <button onclick={gantiPresent} class:on={present} aria-pressed={present} title="Mode presentasi: huruf besar, daftar butir disembunyikan, ← → untuk pindah butir" aria-label="Mode presentasi">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1" /><path d="M12 16v4M8 20h8" /></svg>
+      </button>
       <button onclick={gantiTema} title={theme === 'dark' ? 'Mode terang' : 'Mode gelap'} aria-label={theme === 'dark' ? 'Mode terang' : 'Mode gelap'}>
         {#if theme === 'dark'}
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
@@ -88,7 +100,7 @@
   {/if}
 </main>
 
-<footer class="container no-print">
+<footer class="container no-print no-present">
   <p>
     Disusun dari Instrumen LED dan Matriks Penilaian Kinerja Program Studi LAM INFOKOM 2.1 (2025). Contoh narasi bersifat
     ilustratif. Bukan situs resmi LAM INFOKOM; selalu rujuk dokumen asli.
@@ -113,6 +125,7 @@
     background: transparent; border: 1px solid transparent; border-radius: var(--radius); color: var(--muted);
   }
   .tools button:hover { color: var(--text); border-color: var(--border); }
+  .tools button.on { color: var(--accent); border-color: var(--accent); }
   .tools svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   .jenjang a { padding: 3px 10px; color: var(--muted); font-size: 0.9rem; text-decoration: none; border: 1px solid transparent; border-radius: var(--radius); }
   .jenjang a:hover { color: var(--text); }
