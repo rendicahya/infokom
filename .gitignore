@@ -147,3 +147,6 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Dokumen sumber PDF (tidak dipublikasikan)
+*.pdf
