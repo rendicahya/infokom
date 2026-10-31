@@ -17,6 +17,26 @@ export const KRITERIA = [
   { id: 'suplemen', nama: 'Suplemen Program Studi', singkat: 'Suplemen', syaratUnggul: false },
 ];
 
+// Alur PPEPP: butir dengan kriteria & huruf yang sama membentuk satu siklus (mis. 2.1 A → 2.2 A → … → 2.5 A).
+// Topiknya identik di ketiga jenjang.
+const ALUR_JUDUL = {
+  '1A': 'Tata kelola internal & SOP',
+  '1B': 'Fungsi SPMI & SDM pelaksana',
+  '2A': 'Sarpras, DTPR, pembiayaan & penerimaan mahasiswa',
+  '2B': 'Isi pembelajaran & kurikulum OBE',
+  '2C': 'Fleksibilitas proses pembelajaran',
+  '2D': 'Prestasi mahasiswa & kompetensi lulusan',
+  '3A': 'Sarpras, DTPR, pembiayaan & peta jalan penelitian',
+  '3B': 'Implementasi peta jalan & pelibatan mahasiswa',
+  '3C': 'Hibah, kerja sama, publikasi & HKI',
+  '4A': 'Sarpras, DTPR, pembiayaan & peta jalan PkM',
+  '4B': 'Implementasi peta jalan PkM & pelibatan mahasiswa',
+  '4C': 'Hibah, kerja sama, diseminasi & HKI',
+  '5A': 'Tata kelola otonom, transparan & akuntabel',
+  '5B': 'Audit mutu tupoksi, sarpras & SDM',
+  '6': 'Tridarma, VMTS & rencana strategis',
+};
+
 // Konteks yang dipakai contoh narasi agar sesuai jenjang.
 const KONTEKS = {
   sarjana: {
@@ -51,13 +71,27 @@ function build(id, nama, matriksMd, ledMd) {
 
   for (const b of butir) b.panduan = panduanUntukButir(led, b);
 
+  const alur = [];
+  for (const b of butir) {
+    if (!b.tahapNo || b.kriteria === 'suplemen') continue;
+    const aid = `${b.kriteriaNo}${b.huruf}`;
+    let a = alur.find((x) => x.id === aid);
+    if (!a) {
+      a = { id: aid, label: b.huruf ? `${b.kriteriaNo}.x ${b.huruf}` : `${b.kriteriaNo}.x`, kriteria: b.kriteria, huruf: b.huruf, judul: ALUR_JUDUL[aid] || '', butir: [], bobot: 0 };
+      alur.push(a);
+    }
+    a.butir[b.tahapNo - 1] = b;
+    a.bobot += b.bobot;
+    b.alur = a;
+  }
+
   const totalBobot = butir.reduce((a, b) => a + b.bobot, 0);
   const kriteria = KRITERIA.map((k) => {
     const list = butir.filter((b) => b.kriteria === k.id);
-    return { ...k, butir: list, bobot: list.reduce((a, b) => a + b.bobot, 0) };
+    return { ...k, butir: list, alur: alur.filter((a) => a.kriteria === k.id), bobot: list.reduce((a, b) => a + b.bobot, 0) };
   }).filter((k) => k.butir.length);
 
-  return { id, nama, butir, kriteria, led, totalBobot, konteks: KONTEKS[id] };
+  return { id, nama, butir, kriteria, alur, led, totalBobot, konteks: KONTEKS[id] };
 }
 
 export const JENJANG = [

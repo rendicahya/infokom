@@ -1,65 +1,101 @@
 <script>
   import { JENJANG, fmt } from '../lib/data.js';
   import { href } from '../lib/router.svelte.js';
+  import AlurMatrix from '../lib/AlurMatrix.svelte';
+
+  const contoh = JENJANG[0];
+  const k2 = contoh.kriteria.find((k) => k.id === 'k2');
 </script>
 
-<section class="hero">
-  <h1>Pahami LED LAM INFOKOM tanpa membaca PDF ratusan halaman</h1>
-  <p class="muted">
-    Setiap butir penilaian disajikan ringkas: bobot, jenis (Input/Proses/Output), panduan penulisan dari Instrumen LED,
-    rubrik skor 1–4, syarat Unggul, dan contoh narasi. Hitung juga perkiraan nilai akhir dan status akreditasi.
+<header class="intro">
+  <div class="label">LAM INFOKOM · Instrumen Akreditasi 2.1 (2025)</div>
+  <h1>Panduan Laporan Evaluasi Diri</h1>
+  <p>
+    Ringkasan Instrumen LED dan Matriks Penilaian untuk program Sarjana, Magister, dan Doktor. Setiap butir dilengkapi bobot,
+    panduan penulisan, rubrik skor, syarat Unggul, posisinya dalam siklus PPEPP, dan contoh narasi.
   </p>
-</section>
+</header>
 
-<div class="grid">
-  {#each JENJANG as j}
-    <div class="card jenjang">
-      <h2>Program {j.nama}</h2>
-      <div class="stats">
-        <div><b>{j.butir.length}</b><span>butir</span></div>
-        <div><b>{fmt(j.totalBobot)}</b><span>total bobot</span></div>
-        <div><b>{j.kriteria.length}</b><span>kelompok</span></div>
-      </div>
-      <div class="links">
-        <a class="btn primary" href={href(j.id, 'butir')}>Pelajari butir</a>
-        <a class="btn" href={href(j.id, 'kalkulator')}>Kalkulator</a>
-        <a class="btn" href={href(j.id, 'panduan')}>Panduan LED</a>
-      </div>
-    </div>
-  {/each}
+<div class="table-wrap">
+  <table class="jj">
+    <thead>
+      <tr><th>Jenjang</th><th class="num">Butir</th><th class="num">Total bobot</th><th>Suplemen</th><th></th></tr>
+    </thead>
+    <tbody>
+      {#each JENJANG as j}
+        <tr>
+          <td><a class="nama" href={href(j.id, 'butir')}>{j.nama}</a></td>
+          <td class="num">{j.butir.length}</td>
+          <td class="num">{fmt(j.totalBobot)}</td>
+          <td class="muted">{j.kriteria.some((k) => k.id === 'suplemen') ? 'Ada' : 'Tidak ada'}</td>
+          <td class="go">
+            <a href={href(j.id, 'butir')}>Butir</a>
+            <a href={href(j.id, 'panduan')}>Panduan</a>
+            <a href={href(j.id, 'kalkulator')}>Kalkulator</a>
+          </td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
 </div>
 
-<section class="card how">
-  <h2>Cara membaca LED dalam 1 menit</h2>
-  <ol>
-    <li><b>Kondisi Eksternal & Profil UPPS</b> (butir A–B): analisis lingkungan makro/mikro dan profil ringkas.</li>
-    <li>
-      <b>Enam kriteria</b> — Budaya Mutu, Relevansi Pendidikan, Relevansi Penelitian, Relevansi PkM, Akuntabilitas,
-      Diferensiasi Misi — masing-masing ditulis mengikuti siklus <b>PPEPP</b>:
-      <span class="ppepp">
-        <span>Penetapan</span><span>Pelaksanaan</span><span>Evaluasi</span><span>Pengendalian</span><span>Peningkatan</span>
-      </span>
-    </li>
-    <li><b>Suplemen Program Studi</b> (Sarjana & Magister): muatan kurikulum khas bidang.</li>
-    <li>
-      <b>Nilai akhir</b> = Σ(bobot × skor) ÷ 4. Unggul bila nilai ≥ 321 <i>dan</i> setiap butir Budaya Mutu, Relevansi
-      Pendidikan, Relevansi Penelitian ≥ 3,00 dengan rerata tiap kriteria tersebut ≥ 3,20.
-    </li>
-  </ol>
+<div class="cols">
+  <section>
+    <h2>Struktur LED</h2>
+    <dl>
+      <dt>A–B</dt>
+      <dd><b>Kondisi eksternal dan profil UPPS.</b> Analisis lingkungan makro/mikro dan profil ringkas.</dd>
+      <dt>C.1–C.6</dt>
+      <dd>
+        <b>Enam kriteria:</b> Budaya Mutu, Relevansi Pendidikan, Relevansi Penelitian, Relevansi PkM, Akuntabilitas, dan
+        Diferensiasi Misi. Semuanya ditulis mengikuti siklus PPEPP.
+      </dd>
+      <dt>D</dt>
+      <dd><b>Suplemen program studi</b> (Sarjana dan Magister): muatan kurikulum khas bidang.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Nilai akhir</h2>
+    <p class="formula">NA = Σ (bobot × skor) ÷ 4</p>
+    <p>
+      Terakreditasi bila NA ≥ 200. Unggul bila NA ≥ 321 <i>dan</i> setiap butir Budaya Mutu, Relevansi Pendidikan, dan Relevansi
+      Penelitian ≥ 3,00 dengan rerata tiap kriteria tersebut ≥ 3,20. Unggul berlaku lima tahun bila NA ≥ 361.
+    </p>
+  </section>
+</div>
+
+<section class="ppepp">
+  <h2>Siklus PPEPP: membaca butir sebagai satu alur</h2>
+  <p>
+    Butir dalam satu kriteria bukan daftar lepas. Butir berhuruf sama membentuk satu siklus penjaminan mutu: standar yang
+    <b>ditetapkan</b> di 2.1 A <b>dilaksanakan</b> di 2.2 A, <b>dievaluasi</b> di 2.3 A, <b>dikendalikan</b> (ditindaklanjuti)
+    di 2.4 A, lalu <b>ditingkatkan</b> di 2.5 A. Peningkatan itu menjadi penetapan baru untuk siklus berikutnya.
+  </p>
+  <p>
+    Konsekuensinya, narasi tiap butir harus merujuk butir sebelumnya. Indikator yang dievaluasi harus sama dengan yang
+    ditetapkan, dan tindak lanjut harus menjawab temuan evaluasi.
+  </p>
+  <div class="label">Contoh: Kriteria 2 Relevansi Pendidikan ({contoh.nama})</div>
+  <AlurMatrix jenjang={contoh} alur={k2.alur} />
+  <p class="muted small">Baca setiap baris dari kiri ke kanan. Klik butir untuk membuka rubrik dan contoh narasinya.</p>
 </section>
 
 <style>
-  .hero { max-width: 760px; margin: 12px 0 28px; }
-  .hero h1 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px; }
-  .stats { display: flex; gap: 20px; margin: 12px 0 18px; }
-  .stats div { display: flex; flex-direction: column; }
-  .stats b { font-size: 1.5rem; }
-  .stats span { color: var(--muted); font-size: 0.82rem; }
-  .links { display: flex; gap: 8px; flex-wrap: wrap; }
-  .how ol { padding-left: 1.3em; margin: 0; }
-  .how li { margin: 0.5em 0; }
-  .ppepp { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-  .ppepp span { background: var(--accent-soft); color: var(--accent); padding: 2px 10px; border-radius: 999px; font-size: 0.82rem; }
-  .ppepp span + span::before { content: '→ '; }
+  .intro { max-width: 720px; margin: 8px 0 28px; }
+  .intro h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 6px 0 12px; }
+  .intro p { font-size: 1.05rem; margin: 0; }
+  .jj { margin-bottom: 36px; }
+  .jj td { padding: 11px 10px; vertical-align: middle; }
+  .nama { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--text); }
+  .go { display: flex; gap: 14px; justify-content: flex-end; flex-wrap: wrap; }
+  .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; margin-bottom: 36px; }
+  dl { display: grid; grid-template-columns: 76px 1fr; gap: 8px 12px; margin: 0; }
+  dt { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); padding-top: 2px; }
+  dd { margin: 0; }
+  .formula { font-family: var(--mono); font-size: 1.05rem; border-left: 3px solid var(--accent); padding: 4px 12px; background: var(--surface); }
+  .ppepp { border-top: 1px solid var(--text); padding-top: 20px; }
+  .ppepp > p { max-width: 75ch; }
+  .ppepp .label { margin: 18px 0 6px; }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; gap: 20px; } }
 </style>

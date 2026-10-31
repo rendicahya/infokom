@@ -24,7 +24,8 @@
   let maxK = $derived(Math.max(...jenjang.kriteria.map((k) => k.bobot)));
 </script>
 
-<h1>Rekap Bobot — {jenjang.nama}</h1>
+<div class="label">Program {jenjang.nama}</div>
+<h1>Rekap bobot</h1>
 <p class="muted">Dihitung langsung dari Matriks Penilaian {jenjang.nama}. Total bobot: <b>{fmt(jenjang.totalBobot)}</b> dari {jenjang.butir.length} butir.</p>
 
 <div class="grid">
@@ -50,7 +51,7 @@
       <thead><tr><th>Jenis</th><th class="num">Butir</th><th class="num">Bobot</th><th class="num">%</th></tr></thead>
       <tbody>
         {#each ipo as x}
-          <tr><td><span class="chip {x.j}">{x.j}</span> {JENIS[x.j]}</td><td class="num">{x.n}</td><td class="num">{fmt(x.bobot)}</td><td class="num">{fmt(pct(x.bobot, jenjang.totalBobot), 1)}%</td></tr>
+          <tr><td><span class="jenis {x.j}">{x.j}</span> {JENIS[x.j]}</td><td class="num">{x.n}</td><td class="num">{fmt(x.bobot)}</td><td class="num">{fmt(pct(x.bobot, jenjang.totalBobot), 1)}%</td></tr>
         {/each}
       </tbody>
     </table>
@@ -61,6 +62,26 @@
       <tbody>
         {#each perTahap as x}
           <tr><td>{x.t}</td><td class="num">{x.n} butir</td><td class="num"><b>{fmt(x.bobot)}</b></td></tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card mb">
+  <h2>Bobot per alur PPEPP</h2>
+  <p class="small muted">Satu alur = lima butir berhuruf sama dalam satu kriteria (Penetapan → Peningkatan).</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Alur</th><th>Topik</th>{#each TAHAP as t}<th class="num">{t}</th>{/each}<th class="num">Total</th></tr></thead>
+      <tbody>
+        {#each jenjang.alur as a}
+          <tr>
+            <td class="mono">{a.label}</td>
+            <td>{a.judul}</td>
+            {#each a.butir as b}<td class="num">{b ? fmt(b.bobot) : '–'}</td>{/each}
+            <td class="num"><b>{fmt(a.bobot)}</b></td>
+          </tr>
         {/each}
       </tbody>
     </table>
@@ -109,17 +130,19 @@
 <style>
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
   .mt { margin-top: 16px; }
+  .mb { margin-bottom: 16px; }
   h2.mt { margin-top: 22px; }
   .hb { display: grid; grid-template-columns: 170px 1fr 92px; gap: 10px; align-items: center; margin: 8px 0; }
   .lbl { display: flex; flex-direction: column; line-height: 1.2; font-size: 0.9rem; }
-  .track { height: 12px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
-  .fill { height: 100%; background: var(--accent); border-radius: 999px; }
-  .val { text-align: right; }
-  .stack { display: flex; height: 18px; border-radius: 999px; overflow: hidden; gap: 2px; margin: 8px 0 12px; }
+  .track { height: 10px; background: var(--surface-2); overflow: hidden; }
+  .fill { height: 100%; background: var(--text); }
+  .val { text-align: right; font-variant-numeric: tabular-nums; }
+  .stack { display: flex; height: 14px; overflow: hidden; gap: 2px; margin: 8px 0 12px; }
   .seg.I { background: var(--i); }
   .seg.P { background: var(--p); }
   .seg.O { background: var(--o); }
-  .cur { background: var(--accent-soft); font-weight: 700; }
+  .cur { background: var(--surface); font-weight: 700; }
+  h2 { font-size: 1.15rem; }
   .total td { font-weight: 700; }
   @media (max-width: 520px) { .hb { grid-template-columns: 1fr 70px; } .track { grid-column: 1 / -1; grid-row: 2; } }
 </style>

@@ -21,21 +21,20 @@
 <header class="no-print">
   <div class="container bar">
     <a class="brand" href="#/">
-      <span class="logo">L</span>
-      <span>Panduan LED <b>LAM INFOKOM</b></span>
+      <b>LED</b><span class="sep">/</span><span>LAM INFOKOM</span>
     </a>
-    <nav class="jenjang">
+    <nav class="jenjang" aria-label="Jenjang">
       {#each JENJANG as j}
         <a href={href(j.id, page || 'butir')} class:active={jenjang?.id === j.id}>{j.nama}</a>
       {/each}
     </nav>
   </div>
   {#if jenjang}
-    <div class="container tabs">
+    <nav class="container tabs" aria-label="Halaman">
       {#each PAGES as p}
         <a href={href(jenjang.id, p.id)} class:active={page === p.id}>{p.label}</a>
       {/each}
-    </div>
+    </nav>
   {/if}
 </header>
 
@@ -53,39 +52,40 @@
   {/if}
 </main>
 
-<footer class="container muted small no-print">
-  Disusun dari Instrumen LED dan Matriks Penilaian Kinerja Program Studi LAM INFOKOM 2.1 (2025). Contoh narasi bersifat ilustratif.
-  Bukan situs resmi LAM INFOKOM; selalu rujuk dokumen asli.
+<footer class="container no-print">
+  <p>
+    Disusun dari Instrumen LED dan Matriks Penilaian Kinerja Program Studi LAM INFOKOM 2.1 (2025). Contoh narasi bersifat
+    ilustratif. Bukan situs resmi LAM INFOKOM; selalu rujuk dokumen asli.
+  </p>
 </footer>
 
 <style>
   header {
     position: sticky; top: 0; z-index: 10;
-    background: color-mix(in srgb, var(--surface) 92%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    border-top: 3px solid var(--text);
+    border-bottom: 1px solid var(--text);
   }
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; }
-  .brand { display: flex; align-items: center; gap: 10px; color: var(--text); font-size: 1rem; }
-  .brand:hover { text-decoration: none; }
-  .logo {
-    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px;
-    background: var(--accent); color: #fff; font-weight: 800;
-  }
-  .jenjang { display: flex; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 10px; }
-  .jenjang a { padding: 4px 12px; border-radius: 8px; color: var(--muted); font-weight: 600; font-size: 0.9rem; }
-  .jenjang a:hover { text-decoration: none; color: var(--text); }
-  .jenjang a.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }
-  .tabs { display: flex; gap: 4px; overflow-x: auto; }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 54px; }
+  .brand { display: flex; align-items: baseline; gap: 6px; color: var(--text); font-family: var(--serif); font-size: 1.15rem; text-decoration: none; }
+  .brand b { font-weight: 700; }
+  .brand .sep { color: var(--accent); }
+  .jenjang { display: flex; gap: 2px; }
+  .jenjang a { padding: 3px 10px; color: var(--muted); font-size: 0.9rem; text-decoration: none; border: 1px solid transparent; border-radius: var(--radius); }
+  .jenjang a:hover { color: var(--text); }
+  .jenjang a.active { color: var(--text); border-color: var(--text); font-weight: 600; }
+  .tabs { display: flex; gap: 22px; overflow-x: auto; border-top: 1px solid var(--border); }
   .tabs a {
-    padding: 10px 14px; color: var(--muted); border-bottom: 2px solid transparent;
-    white-space: nowrap; font-weight: 500;
+    padding: 9px 0 8px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px;
+    white-space: nowrap; font-size: 0.92rem; text-decoration: none;
   }
-  .tabs a:hover { text-decoration: none; color: var(--text); }
-  .tabs a.active { color: var(--accent); border-bottom-color: var(--accent); }
-  main { padding-top: 24px; padding-bottom: 40px; min-height: 70vh; }
-  footer { padding-bottom: 32px; border-top: 1px solid var(--border); padding-top: 16px; }
+  .tabs a:hover { color: var(--text); }
+  .tabs a.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+  main { padding-top: 28px; padding-bottom: 48px; min-height: 70vh; }
+  footer { padding-bottom: 32px; }
+  footer p { border-top: 1px solid var(--border); padding-top: 14px; margin: 0; color: var(--muted); font-size: 0.82rem; max-width: 70ch; }
   @media (max-width: 640px) {
     .brand span:last-child { display: none; }
+    .jenjang a { padding: 3px 7px; }
   }
 </style>

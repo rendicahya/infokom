@@ -1,5 +1,6 @@
 <script>
   import Md from '../lib/Md.svelte';
+  import AlurMatrix from '../lib/AlurMatrix.svelte';
   import { sectionMarkdown } from '../lib/parse.js';
   import { href } from '../lib/router.svelte.js';
   import { fmt } from '../lib/data.js';
@@ -12,8 +13,12 @@
 </script>
 
 <div class="wrap">
-  <h1>Panduan Penyusunan LED — {jenjang.nama}</h1>
-  <p class="muted">Isi Instrumen LED disajikan per bagian. Klik judul untuk membuka. Pada bagian kriteria, setiap tahap PPEPP ditautkan ke butir penilaian beserta bobotnya.</p>
+  <div class="label">Program {jenjang.nama}</div>
+  <h1>Panduan penyusunan LED</h1>
+  <p class="lead">
+    Isi Instrumen LED, per bagian. Setiap kriteria dibuka dengan peta alur PPEPP, lalu panduan per tahap yang ditautkan ke
+    butir penilaian beserta bobotnya.
+  </p>
 
   <h2 class="part">Bagian Kesatu · Kerangka Konseptual</h2>
   {#each led.bagian1.children as s}
@@ -41,17 +46,24 @@
 
   {#each led.kriteria as k}
     {@const total = butirKriteria(k.no).reduce((a, b) => a + b.bobot, 0)}
+    {@const alur = jenjang.alur.filter((a) => a.kriteria === 'k' + k.no)}
     <details class="card">
       <summary>C.{k.no} {k.judul} <span class="tag">bobot {fmt(total)}</span></summary>
       <Md text={k.intro} />
+      {#if alur.length}
+        <div class="peta">
+          <div class="label">Peta alur PPEPP · baca per baris</div>
+          <AlurMatrix {jenjang} {alur} />
+        </div>
+      {/if}
       {#each k.tahap as t}
         <div class="tahap">
           <h4>{t.judul}</h4>
           <Md text={t.intro} />
           {#each butirTahap(k.no, t.no) as b}
             <a class="link" href={href(jenjang.id, 'butir', b.no)}>
-              <span class="chip {b.jenis}">{b.jenis}</span>
-              <b>{b.kode}</b>
+              <span class="jenis {b.jenis}">{b.jenis}</span>
+              <b class="mono">{b.kode}</b>
               <span class="t">{t.items[b.huruf] || ''}</span>
               <span class="w">{fmt(b.bobot)}</span>
             </a>
@@ -85,23 +97,35 @@
 </div>
 
 <style>
-  .wrap { max-width: 900px; }
-  .part { margin: 28px 0 12px; }
-  details { margin-bottom: 10px; padding: 0; }
-  details > :global(*:not(summary)) { margin-left: 20px; margin-right: 20px; }
-  details[open] { padding-bottom: 16px; }
-  summary { cursor: pointer; padding: 14px 20px; font-weight: 600; list-style-position: inside; }
+  .wrap { max-width: 920px; }
+  .wrap > h1 { margin-top: 4px; }
+  .lead { max-width: 70ch; }
+  .part { margin: 36px 0 0; padding-bottom: 6px; border-bottom: 1px solid var(--text); }
+  /* Bagian-bagian ditampilkan sebagai daftar bergaris, bukan kartu */
+  details.card { background: transparent; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; padding: 0; }
+  details > :global(*:not(summary)) { margin-left: 26px; }
+  details[open] { padding-bottom: 20px; }
+  summary { cursor: pointer; padding: 12px 0; font-family: var(--serif); font-size: 1.08rem; font-weight: 600; list-style: none; position: relative; padding-left: 26px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '+'; position: absolute; left: 4px; font-family: var(--mono); color: var(--accent); }
+  details[open] > summary::before { content: '−'; }
   summary:hover { color: var(--accent); }
-  .plain { margin: 12px 0; }
-  .tag { font-size: 0.78rem; font-weight: 500; background: var(--surface-2); color: var(--muted); padding: 2px 8px; border-radius: 999px; margin-left: 8px; }
-  a.tag { color: var(--accent); }
-  .tahap { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+  .plain { background: transparent; border: 0; padding: 16px 0 0; }
+  .tag { font: 400 0.78rem var(--mono); color: var(--muted); margin-left: 8px; }
+  a.tag { color: var(--link); }
+  .peta { margin: 14px 0 6px; }
+  .peta .label { margin-bottom: 6px; }
+  .tahap { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 16px; }
   .tahap h4 { margin-bottom: 4px; }
   .link {
-    display: grid; grid-template-columns: auto auto 1fr auto; gap: 8px; align-items: start;
-    padding: 8px 10px; border-radius: 8px; background: var(--surface-2); margin: 6px 0; color: var(--text); font-size: 0.9rem;
+    display: grid; grid-template-columns: auto auto 1fr auto; gap: 10px; align-items: start;
+    padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+    margin: 6px 0; color: var(--text); font-size: 0.9rem; text-decoration: none;
   }
-  .link:hover { text-decoration: none; outline: 1px solid var(--accent); }
-  .w { font-weight: 700; }
-  @media (max-width: 600px) { .link { grid-template-columns: auto 1fr auto; } .link .t { grid-column: 1 / -1; grid-row: 2; } }
+  .link:hover { border-color: var(--accent); }
+  .w { font-weight: 600; font-variant-numeric: tabular-nums; }
+  @media (max-width: 600px) {
+    details > :global(*:not(summary)) { margin-left: 0; }
+    .link { grid-template-columns: auto 1fr auto; } .link .t { grid-column: 1 / -1; grid-row: 2; }
+  }
 </style>

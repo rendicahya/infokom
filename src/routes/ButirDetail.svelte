@@ -1,8 +1,10 @@
 <script>
   import Md from '../lib/Md.svelte';
+  import AlurRail from '../lib/AlurRail.svelte';
   import { fmt } from '../lib/data.js';
   import { JENIS, TAHAP } from '../lib/parse.js';
   import { getNarasi } from '../lib/narasi.js';
+  import { kesinambungan } from '../lib/alur.js';
 
   let { jenjang, butir } = $props();
 
@@ -26,19 +28,27 @@
   }
 </script>
 
-<article class="card">
+<article>
   <div class="head">
     <div>
-      <div class="muted small">{kriteriaNama}{butir.tahapNo ? ` · ${TAHAP[butir.tahapNo - 1]}` : ''} · Butir {butir.no}</div>
+      <div class="label">{kriteriaNama}{butir.tahapNo ? ` · ${TAHAP[butir.tahapNo - 1]}` : ''} · butir {butir.no}</div>
       <h2>{butir.kode}</h2>
+      <span class="jenis {butir.jenis}">{JENIS[butir.jenis]}</span>
     </div>
-    <div class="weight">
-      <span class="chip {butir.jenis}">{JENIS[butir.jenis]}</span>
-      <div class="big">{fmt(butir.bobot)}</div>
-      <div class="muted small">bobot · {fmt(persen, 1)}% dari {fmt(jenjang.totalBobot)}</div>
-      <div class="muted small">skor 4 = +{fmt(butir.bobot)}, skor 3 = +{fmt(butir.bobot * 0.75)}</div>
-    </div>
+    <dl class="weight">
+      <div><dt>Bobot</dt><dd class="big">{fmt(butir.bobot)}</dd></div>
+      <div><dt>Porsi</dt><dd>{fmt(persen, 1)}%</dd></div>
+      <div><dt>Skor 4 / 3</dt><dd>+{fmt(butir.bobot)} / +{fmt(butir.bobot * 0.75)}</dd></div>
+    </dl>
   </div>
+
+  {#if butir.alur}
+    <section class="alur">
+      <div class="label">Alur PPEPP {butir.alur.label} · {butir.alur.judul} · bobot alur {fmt(butir.alur.bobot)}</div>
+      <AlurRail {jenjang} alur={butir.alur} current={butir.no} />
+      <div class="sambung"><Md text={kesinambungan(jenjang.id, butir)} /></div>
+    </section>
+  {/if}
 
   <section>
     <h3>Elemen penilaian</h3>
@@ -79,7 +89,7 @@
   {/if}
 
   {#if butir.syaratUnggul}
-    <div class="unggul"><b>Syarat Unggul (minimal skor 3,00):</b> {butir.syaratUnggul}</div>
+    <div class="unggul"><span class="label">Syarat Unggul · minimal skor 3,00</span><p>{butir.syaratUnggul}</p></div>
   {/if}
 
   <section>
@@ -93,7 +103,7 @@
       <div class="rubrik">
         {#each LEVEL as l}
           <div class="lvl s{l.s}">
-            <div class="lh"><b>{l.s}</b> {l.label}</div>
+            <div class="lh"><span class="sk">{l.s}</span> {l.label}</div>
             <Md text={butir.rubrik[l.s]} />
           </div>
         {/each}
@@ -105,7 +115,7 @@
     <section class="narasi">
       <div class="nh">
         <h3>Contoh narasi</h3>
-        <button class="btn small no-print" onclick={salin}>{copied ? 'Tersalin ✓' : 'Salin'}</button>
+        <button class="btn small no-print" onclick={salin}>{copied ? 'Tersalin' : 'Salin teks'}</button>
       </div>
       <p class="muted small">
         Ilustrasi untuk {jenjang.konteks.ps} di institusi fiktif (FIK-UN). Ganti semua angka, nomor dokumen, dan nama dengan
@@ -117,24 +127,36 @@
 </article>
 
 <style>
-  section { margin-top: 22px; }
-  .head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  .head h2 { font-size: 1.8rem; margin: 2px 0 0; }
-  .weight { text-align: right; }
-  .big { font-size: 2rem; font-weight: 800; line-height: 1.1; margin-top: 4px; }
-  .panduan { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; }
-  .panduan h3 { margin-bottom: 2px; }
-  .focus { background: var(--surface); border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
-  .unggul { margin-top: 18px; padding: 10px 14px; border-left: 4px solid var(--ok); background: var(--o-soft); border-radius: 6px; }
-  .rubrik { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
-  .lvl { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 0.9rem; }
-  .lvl.s4 { border-top: 4px solid var(--ok); }
-  .lvl.s3 { border-top: 4px solid var(--i); }
-  .lvl.s2 { border-top: 4px solid var(--p); }
-  .lvl.s1 { border-top: 4px solid var(--danger); }
-  .lh { margin-bottom: 6px; }
-  .lh b { font-size: 1.2rem; margin-right: 4px; }
-  .narasi .nh { display: flex; justify-content: space-between; align-items: center; }
-  .ntext { border: 1px dashed var(--border); border-radius: 10px; padding: 14px 16px; background: var(--surface-2); }
-  select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); margin-left: 6px; }
-</style>
+  section { margin-top: 28px; }
+  h3 { border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+  .head { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 1px solid var(--text); }
+  .head h2 { font-family: var(--mono); font-size: 2.1rem; font-weight: 600; margin: 4px 0 2px; letter-spacing: -0.02em; }
+  .weight { display: flex; gap: 22px; margin: 0; align-items: flex-end; }
+  .weight dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .weight dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .weight .big { font-family: var(--serif); font-size: 2rem; font-weight: 700; line-height: 1.1; }
+  .alur { margin-top: 20px; padding: 14px 16px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+  .alur .label { margin-bottom: 12px; }
+  .sambung { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 0.92rem; }
+  .panduan { border-left: 3px solid var(--accent); padding: 2px 0 2px 16px; }
+  .panduan h3 { border: 0; margin-bottom: 0; }
+  .focus { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin: 10px 0; }
+  .unggul { margin-top: 24px; padding: 10px 14px; border: 1px solid var(--ok); border-radius: var(--radius); }
+  .unggul .label { color: var(--ok); }
+  .unggul p { margin: 4px 0 0; }
+  /* Garis antarsel dibentuk oleh gap 1px di atas latar warna border */
+  .rubrik {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px;
+    background: var(--border); border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .lvl { padding: 10px 14px; font-size: 0.9rem; background: var(--surface); }
+  .lh { margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .sk { font-family: var(--mono); width: 24px; height: 24px; display: grid; place-items: center; border: 1px solid currentColor; }
+  .s4 .sk { color: var(--ok); }
+  .s3 .sk { color: var(--i); }
+  .s2 .sk { color: var(--p); }
+  .s1 .sk { color: var(--danger); }
+  .narasi .nh { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
+  .narasi .nh h3 { border: 0; margin: 0; }
+  .ntext { font-family: var(--serif); font-size: 1.02rem; line-height: 1.65; padding: 4px 0 0 16px; border-left: 1px solid var(--border); }
+  select { padding: 3px 8px; margin-left: 6px; }</style>
