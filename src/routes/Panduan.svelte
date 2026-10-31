@@ -34,6 +34,8 @@
     <Md text={sectionMarkdown(led.pendahuluan)} />
   </details>
 
+  <h3 class="sub">II. Laporan Evaluasi Diri</h3>
+
   {#each [led.kondisiEksternal, led.profil] as node, i}
     {@const b = jenjang.butir[i]}
     <details class="card">
@@ -42,8 +44,13 @@
     </details>
   {/each}
 
-  <div class="card plain"><Md text={led.kriteriaIntro} /></div>
+  <!-- C. Kriteria sebagai induk; C.1, C.2, … ditampilkan menjorok di bawahnya -->
+  <details class="card">
+    <summary>C. KRITERIA <span class="tag">{led.kriteria.length} kriteria · bobot {fmt(led.kriteria.reduce((t, k) => t + butirKriteria(k.no).reduce((a, b) => a + b.bobot, 0), 0))}</span></summary>
+    <Md text={led.kriteriaIntro} />
+  </details>
 
+  <div class="anak">
   {#each led.kriteria as k}
     {@const total = butirKriteria(k.no).reduce((a, b) => a + b.bobot, 0)}
     {@const alur = jenjang.alur.filter((a) => a.kriteria === 'k' + k.no)}
@@ -72,6 +79,7 @@
       {/each}
     </details>
   {/each}
+  </div>
 
   {#if led.suplemen}
     <details class="card">
@@ -97,7 +105,7 @@
 </div>
 
 <style>
-  .wrap { max-width: 920px; }
+  .wrap { max-width: 57.5rem; }
   .wrap > h1 { margin-top: 4px; }
   .lead { max-width: 70ch; }
   .part { margin: 36px 0 0; padding-bottom: 6px; border-bottom: 1px solid var(--text); }
@@ -110,7 +118,11 @@
   summary::before { content: '+'; position: absolute; left: 4px; font-family: var(--mono); color: var(--accent); }
   details[open] > summary::before { content: '−'; }
   summary:hover { color: var(--accent); }
-  .plain { background: transparent; border: 0; padding: 16px 0 0; }
+  .sub { margin: 24px 0 0; padding-bottom: 4px; font-size: 1rem; color: var(--muted); border-bottom: 1px solid var(--border); }
+  .anak { margin-left: 26px; border-left: 1px solid var(--border); padding-left: 0; }
+  .anak > details.card > summary { padding-left: 30px; }
+  .anak > details.card > summary::before { left: 10px; }
+  .anak > details.card { border-bottom-style: dashed; }
   .tag { font: 400 0.78rem var(--mono); color: var(--muted); margin-left: 8px; }
   a.tag { color: var(--link); }
   .peta { margin: 14px 0 6px; }
@@ -126,6 +138,7 @@
   .w { font-weight: 600; font-variant-numeric: tabular-nums; }
   @media (max-width: 600px) {
     details > :global(*:not(summary)) { margin-left: 0; }
+    .anak { margin-left: 10px; }
     .link { grid-template-columns: auto 1fr auto; } .link .t { grid-column: 1 / -1; grid-row: 2; }
   }
 </style>

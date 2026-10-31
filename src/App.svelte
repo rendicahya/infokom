@@ -37,6 +37,30 @@
     try { localStorage.setItem('present', present ? '1' : '0'); } catch {}
   }
 
+  // Zoom 70–200%, langkah 10%; nilai awal dipasang oleh skrip di index.html
+  const ZMIN = 0.7, ZMAX = 2;
+  let zoom = $state(+getComputedStyle(document.documentElement).getPropertyValue('--zoom') || 1);
+
+  function aturZoom(z) {
+    zoom = Math.round(Math.min(ZMAX, Math.max(ZMIN, z)) * 10) / 10;
+    document.documentElement.style.setProperty('--zoom', zoom);
+    try { localStorage.setItem('zoom', zoom); } catch {}
+  }
+
+  // Ctrl+scroll (dan pinch di touchpad) mengubah zoom aplikasi, bukan zoom browser
+  $effect(() => {
+    let akhir = 0;
+    const onwheel = (e) => {
+      if (!e.ctrlKey) return;
+      e.preventDefault();
+      if (Date.now() - akhir < 80 || !e.deltaY) return;
+      akhir = Date.now();
+      aturZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+    };
+    window.addEventListener('wheel', onwheel, { passive: false });
+    return () => window.removeEventListener('wheel', onwheel);
+  });
+
   function gantiFull() {
     if (document.fullscreenElement) document.exitFullscreen();
     else document.documentElement.requestFullscreen().catch(() => {});
@@ -55,6 +79,15 @@
         <a href={href(j.id, page || 'butir')} class:active={jenjang?.id === j.id}>{j.nama}</a>
       {/each}
     </nav>
+    <div class="tools zoom" role="group" aria-label="Zoom">
+      <button onclick={() => aturZoom(zoom - 0.1)} disabled={zoom <= ZMIN} title="Perkecil (Ctrl+scroll)" aria-label="Perkecil">
+        <svg viewBox="0 0 24 24"><path d="M6 12h12" /></svg>
+      </button>
+      <button class="pct" onclick={() => aturZoom(1)} title="Kembalikan ke 100%">{Math.round(zoom * 100)}%</button>
+      <button onclick={() => aturZoom(zoom + 0.1)} disabled={zoom >= ZMAX} title="Perbesar (Ctrl+scroll)" aria-label="Perbesar">
+        <svg viewBox="0 0 24 24"><path d="M6 12h12M12 6v12" /></svg>
+      </button>
+    </div>
     <div class="tools">
       <button onclick={gantiPresent} class:on={present} aria-pressed={present} title="Mode presentasi: huruf besar, daftar butir disembunyikan, ← → untuk pindah butir" aria-label="Mode presentasi">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1" /><path d="M12 16v4M8 20h8" /></svg>
@@ -126,6 +159,8 @@
   }
   .tools button:hover { color: var(--text); border-color: var(--border); }
   .tools button.on { color: var(--accent); border-color: var(--accent); }
+  .tools button:disabled { opacity: 0.35; cursor: default; border-color: transparent; }
+  .tools .pct { width: auto; min-width: 44px; font: 0.78rem var(--mono); }
   .tools svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   .jenjang a { padding: 3px 10px; color: var(--muted); font-size: 0.9rem; text-decoration: none; border: 1px solid transparent; border-radius: var(--radius); }
   .jenjang a:hover { color: var(--text); }
@@ -143,5 +178,6 @@
   @media (max-width: 640px) {
     .brand span:last-child { display: none; }
     .jenjang a { padding: 3px 7px; }
+    .zoom { display: none; }
   }
 </style>

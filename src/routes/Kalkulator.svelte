@@ -184,7 +184,14 @@
       <input
         type="number" min="0" max="4" step="0.01" value={s ?? ''} placeholder="–"
         aria-label="Skor {b.kode}"
-        onchange={(e) => set(b.no, e.currentTarget.value)}
+        onkeydown={(e) => [',', 'e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
+        onpaste={(e) => /[^\d.]/.test(e.clipboardData.getData('text').trim()) && e.preventDefault()}
+        onchange={(e) => {
+          // Di luar 0–4 ditolak (bukan dipotong) agar salah ketik seperti "35" tidak diam-diam menjadi 4
+          const v = e.currentTarget.value;
+          if (v !== '' && (+v > 4 || +v < 0)) e.currentTarget.value = s ?? '';
+          else set(b.no, v);
+        }}
       />
     {/snippet}
 
