@@ -66,7 +66,7 @@
 <header class="no-print">
   <div class="container bar">
     <a class="brand" href="#/">
-      <b>LED</b><span class="sep">/</span><span>LAM INFOKOM</span>
+      <span class="mark">LED</span><span class="nm">Panduan LAM INFOKOM</span>
     </a>
     <nav class="jenjang" aria-label="Jenjang">
       {#each JENJANG as j}
@@ -139,42 +139,43 @@
 <style>
   header {
     position: sticky; top: 0; z-index: 10;
-    background: var(--bg);
-    border-top: 3px solid var(--text);
-    border-bottom: 1px solid var(--text);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
   }
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 54px; }
-  .brand { display: flex; align-items: baseline; gap: 6px; color: var(--text); font-family: var(--serif); font-size: 1.15rem; text-decoration: none; }
-  .brand b { font-weight: 700; }
-  .brand .sep { color: var(--accent); }
-  .jenjang { display: flex; gap: 2px; margin-left: auto; }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 58px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--text); font-size: 0.98rem; font-weight: 700; text-decoration: none; letter-spacing: -0.01em; }
+  .mark {
+    display: grid; place-items: center; height: 28px; padding: 0 7px; border-radius: var(--radius);
+    background: var(--accent); color: var(--on-accent); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
+  }
+  /* Pemilih jenjang sebagai kontrol segmen */
+  .jenjang { display: flex; gap: 2px; margin-left: auto; padding: 3px; background: var(--surface-2); border-radius: calc(var(--radius) + 3px); }
   .tools { display: flex; gap: 2px; padding-left: 10px; border-left: 1px solid var(--border); }
   .tools button {
     display: grid; place-items: center; width: 30px; height: 30px; padding: 0; cursor: pointer;
     background: transparent; border: 1px solid transparent; border-radius: var(--radius); color: var(--muted);
   }
-  .tools button:hover { color: var(--text); border-color: var(--border); }
-  .tools button.on { color: var(--accent); border-color: var(--accent); }
-  .tools button:disabled { opacity: 0.35; cursor: default; border-color: transparent; }
-  .tools .pct { width: auto; min-width: 44px; font: 0.78rem var(--mono); }
+  .tools button:hover { color: var(--text); background: var(--surface-2); }
+  .tools button:disabled { opacity: 0.35; cursor: default; background: transparent; }
+  .tools .pct { width: auto; min-width: 46px; font-size: 0.78rem; font-weight: 600; font-variant-numeric: tabular-nums; }
   .tools svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-  .jenjang a { padding: 3px 10px; color: var(--muted); font-size: 0.9rem; text-decoration: none; border: 1px solid transparent; border-radius: var(--radius); }
+  .jenjang a { padding: 3px 12px; color: var(--muted); font-size: 0.86rem; font-weight: 500; text-decoration: none; border-radius: var(--radius); }
   .jenjang a:hover { color: var(--text); }
-  .jenjang a.active { color: var(--text); border-color: var(--text); font-weight: 600; }
+  .jenjang a.active { color: var(--text); background: var(--surface); font-weight: 600; box-shadow: 0 0 0 1px var(--border); }
   /* Geser horizontal di layar sempit tanpa menampilkan scrollbar */
-  .tabs { display: flex; gap: 22px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border-top: 1px solid var(--border); }
+  .tabs { display: flex; gap: 26px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
   .tabs a {
-    padding: 9px 0 8px; color: var(--muted); border-bottom: 2px solid transparent;
-    white-space: nowrap; font-size: 0.92rem; text-decoration: none;
+    padding: 8px 0 10px; color: var(--muted); border-bottom: 2px solid transparent;
+    white-space: nowrap; font-size: 0.9rem; font-weight: 500; text-decoration: none;
   }
   .tabs a:hover { color: var(--text); }
-  .tabs a.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
-  main { padding-top: 28px; padding-bottom: 48px; min-height: 70vh; }
+  .tabs a.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  main { padding-top: 32px; padding-bottom: 56px; min-height: 70vh; }
   footer { padding-bottom: 32px; }
-  footer p { border-top: 1px solid var(--border); padding-top: 14px; margin: 0; color: var(--muted); font-size: 0.82rem; max-width: 70ch; }
+  footer p { border-top: 1px solid var(--border); padding-top: 14px; margin: 0; color: var(--muted); font-size: 0.8rem; max-width: 70ch; }
   @media (max-width: 640px) {
-    .brand span:last-child { display: none; }
+    .brand .nm { display: none; }
     .jenjang a { padding: 3px 7px; }
     .zoom { display: none; }
   }

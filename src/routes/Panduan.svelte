@@ -108,7 +108,7 @@
   .wrap { max-width: 57.5rem; }
   .wrap > h1 { margin-top: 4px; }
   .lead { max-width: 70ch; }
-  .part { margin: 36px 0 0; padding-bottom: 6px; border-bottom: 1px solid var(--text); }
+  .part { margin: 36px 0 0; padding-bottom: 6px; border-bottom: 1px solid var(--border-strong); }
   /* Bagian-bagian ditampilkan sebagai daftar bergaris, bukan kartu */
   details.card { background: transparent; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; padding: 0; }
   details > :global(*:not(summary)) { margin-left: 26px; }

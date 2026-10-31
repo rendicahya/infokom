@@ -1,52 +1,67 @@
 :root {
-  --bg: #f4f1e9;
-  --surface: #fbf9f3;
-  --surface-2: #ebe6da;
-  --border: #d6cfbf;
-  --text: #1f1d1a;
-  --muted: #6a6457;
-  --accent: #a8431f;
-  --on-accent: #fbf9f3;
-  --accent-soft: #f1e0d4;
-  --link: #1f3d5c;
-  --i: #3a5a85;
-  --i-soft: #dfe5ee;
-  --p: #9a6a12;
-  --p-soft: #f1e5cb;
-  --o: #3c6e47;
-  --o-soft: #dce9dc;
-  --danger: #a1262d;
-  --danger-soft: #f3dcd9;
-  --ok: #3c6e47;
-  --radius: 3px;
-  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
-  --sans: 'IBM Plex Sans', system-ui, sans-serif;
-  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-2: #edf1f6;
+  --border: #dce2ea;
+  --border-strong: #b9c3d0;
+  --text: #172033;
+  --muted: #5c677a;
+  --accent: #1f4fa3;
+  --on-accent: #ffffff;
+  --accent-soft: #e6eefb;
+  --link: #1f4fa3;
+  --i: #3d5fa8;
+  --i-soft: #e3eaf7;
+  --p: #9a6408;
+  --p-soft: #f8edd8;
+  --o: #2b7a46;
+  --o-soft: #e0f0e5;
+  --danger: #b4322a;
+  --danger-soft: #fbe6e4;
+  --ok: #2b7a46;
+  /* Lima tahap PPEPP: satu warna per tahap, dipakai konsisten di rail, matriks, dan daftar */
+  --t1: #2f5db8;
+  --t2: #0e7c86;
+  --t3: #a86a0c;
+  --t4: #bb4a26;
+  --t5: #2b7a46;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --serif: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --read: 'Literata', Georgia, serif;
   color-scheme: light;
 }
 
 /* data-theme diisi oleh skrip di index.html (pilihan tersimpan, atau preferensi sistem) */
 :root[data-theme='dark'] {
-    --bg: #181715;
-    --surface: #201e1b;
-    --surface-2: #2a2824;
-    --border: #3b3832;
-    --text: #ebe6da;
-    --muted: #a29b8d;
-    --accent: #e0855c;
-    --on-accent: #181715;
-    --accent-soft: #3a261d;
-    --link: #a9c3e0;
-    --i: #94b0d6;
-    --i-soft: #232c38;
-    --p: #dcb066;
-    --p-soft: #352c1c;
-    --o: #8fc39b;
-    --o-soft: #1f2f23;
-    --danger: #ec8078;
-    --danger-soft: #3a1f1d;
-    --ok: #8fc39b;
-    color-scheme: dark;
+  --bg: #0f141c;
+  --surface: #161d28;
+  --surface-2: #1e2734;
+  --border: #2a3443;
+  --border-strong: #3d4a5c;
+  --text: #e5eaf1;
+  --muted: #98a3b4;
+  --accent: #82a8ee;
+  --on-accent: #0f141c;
+  --accent-soft: #1c2a44;
+  --link: #9dbbf3;
+  --i: #95b0e6;
+  --i-soft: #1f2a3f;
+  --p: #e0b25e;
+  --p-soft: #33291a;
+  --o: #7cc796;
+  --o-soft: #18301f;
+  --danger: #f08a80;
+  --danger-soft: #3a1d1b;
+  --ok: #7cc796;
+  --t1: #82a8ee;
+  --t2: #5cc4cc;
+  --t3: #e0b25e;
+  --t4: #ee9473;
+  --t5: #7cc796;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -56,56 +71,56 @@ html, body { margin: 0; }
 body {
   background: var(--bg);
   color: var(--text);
-  font: 0.97rem/1.6 var(--sans);
+  font: 0.95rem/1.6 var(--sans);
   -webkit-font-smoothing: antialiased;
 }
 
 /* Zoom (tombol / Ctrl+scroll) mengalikan ukuran dasar; semua ukuran berbasis rem ikut berubah */
 html { font-size: calc(100% * var(--zoom, 1)); }
 
-a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); }
+a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); }
 a:hover { text-decoration-color: currentColor; }
 
-h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.25; margin: 0 0 0.5em; letter-spacing: -0.005em; }
-h1 { font-size: 2rem; }
+h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; line-height: 1.25; margin: 0 0 0.5em; letter-spacing: -0.015em; }
+h1 { font-size: 1.95rem; letter-spacing: -0.025em; }
 h2 { font-size: 1.4rem; }
-h3 { font-size: 1.12rem; }
+h3 { font-size: 1.1rem; }
+h4 { font-size: 1rem; }
 
-/* Label kecil berhuruf kapital, dipakai sebagai judul seksi */
-.label {
-  font: 600 0.72rem/1.4 var(--sans); text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted);
-}
+/* Konteks kecil di atas judul: huruf biasa, bukan kapital */
+.label { font: 500 0.82rem/1.4 var(--sans); color: var(--muted); }
 
 button, input, select { font: inherit; color: inherit; }
 
-.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+.container { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   padding: 20px;
 }
 
 .muted { color: var(--muted); }
 .small { font-size: 0.86rem; }
-.mono { font-family: var(--mono); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
-  border: 1px solid var(--border); background: var(--surface); color: var(--text);
-  padding: 6px 13px; border-radius: var(--radius); cursor: pointer; text-decoration: none; font-size: 0.92rem;
+  border: 1px solid var(--border-strong); background: var(--surface); color: var(--text);
+  padding: 6px 13px; border-radius: var(--radius); cursor: pointer; text-decoration: none; font-size: 0.88rem; font-weight: 500;
 }
 .btn:hover { border-color: var(--text); }
-.btn.primary { background: var(--text); border-color: var(--text); color: var(--bg); }
-.btn.primary:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { filter: brightness(1.1); }
 
-/* Jenis butir: huruf mono dengan kotak warna */
+/* Jenis butir: huruf dengan titik warna */
 .chip, .jenis {
   display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
-  font: 600 0.74rem/1.5 var(--mono); color: var(--muted);
+  font: 600 0.76rem/1.5 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums;
 }
-.chip::before, .jenis::before { content: ''; width: 8px; height: 8px; background: currentColor; flex: none; }
+.chip::before, .jenis::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
 .chip.I, .jenis.I { color: var(--i); }
 .chip.P, .jenis.P { color: var(--p); }
 .chip.O, .jenis.O { color: var(--o); }
@@ -116,16 +131,20 @@ button, input, select { font: inherit; color: inherit; }
 .prose li { margin: 0.2em 0; }
 .prose > :last-child { margin-bottom: 0; }
 
-table { border-collapse: collapse; width: 100%; }
-th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
-th { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; border-bottom-color: var(--text); }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-size: 0.8rem; color: var(--muted); font-weight: 600; border-bottom-color: var(--border-strong); }
+td.num, th.num { text-align: right; }
 .table-wrap { overflow-x: auto; }
 
-input[type='search'], input[type='number'], select {
-  border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+input[type='search'], input[type='number'], input[type='text'], select {
+  border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface);
 }
-input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
 @media print {
   .no-print { display: none !important; }

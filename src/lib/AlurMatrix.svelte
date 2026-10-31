@@ -12,7 +12,7 @@
     <thead>
       <tr>
         <th>Alur</th>
-        {#each TAHAP as t, i}<th><span class="n">{i + 1}</span> {t}</th>{/each}
+        {#each TAHAP as t, i}<th style="--c: var(--t{i + 1})"><span class="n">{i + 1}</span> {t}</th>{/each}
         <th class="num">Bobot</th>
       </tr>
     </thead>
@@ -22,7 +22,7 @@
           <td class="topik"><span class="mono">{a.label}</span><span>{a.judul}</span></td>
           {#each TAHAP as _, i}
             {@const b = a.butir[i]}
-            <td class="cell" class:end={i === TAHAP.length - 1}>
+            <td class="cell" class:end={i === TAHAP.length - 1} style="--c: var(--t{i + 1})">
               {#if b}
                 <a href={href(jenjang.id, 'butir', b.no)} title="{b.kode} · bobot {fmt(b.bobot)}">
                   <span class="mono">{b.kode}</span>
@@ -41,7 +41,11 @@
 <style>
   .mx { font-size: 0.86rem; min-width: 640px; }
   .mx th { white-space: nowrap; }
-  .n { font-family: var(--mono); color: var(--accent); }
+  .mx th[style] { color: var(--c); border-bottom: 2px solid var(--c); }
+  .n {
+    display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; margin-right: 2px;
+    background: var(--c); color: var(--surface); font-size: 0.7rem; font-weight: 700;
+  }
   .topik { display: flex; flex-direction: column; line-height: 1.3; min-width: 170px; }
   .topik .mono { font-size: 0.78rem; color: var(--muted); }
   .cell { position: relative; padding: 4px; }
@@ -53,6 +57,7 @@
     display: flex; flex-direction: column; padding: 4px 8px; border: 1px solid var(--border);
     border-radius: var(--radius); background: var(--surface); color: var(--text); text-decoration: none;
   }
-  .cell a:hover { border-color: var(--accent); }
+  .cell a { border-left: 3px solid var(--c); }
+  .cell a:hover { border-color: var(--c); background: color-mix(in srgb, var(--c) 8%, var(--surface)); }
   .cell .mono { font-weight: 600; }
 </style>

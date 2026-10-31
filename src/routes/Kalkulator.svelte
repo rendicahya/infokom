@@ -351,13 +351,13 @@
   .daftar .aksi { white-space: nowrap; }
   .link { border: 0; background: none; padding: 0 0 0 10px; cursor: pointer; color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
   .link.hapus { color: var(--danger); }
-  .seg { display: inline-flex; border: 1px solid var(--text); border-radius: var(--radius); overflow: hidden; }
+  .seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius); overflow: hidden; }
   .seg button { border: 0; background: transparent; padding: 5px 11px; cursor: pointer; font-size: 0.88rem; color: var(--muted); }
   .seg button.on { background: var(--text); color: var(--bg); }
   .group { margin-top: 26px; }
   .ghead {
     display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px;
-    padding-bottom: 4px; border-bottom: 1px solid var(--text);
+    padding-bottom: 4px; border-bottom: 1px solid var(--border-strong);
   }
   .ghead h3 { margin: 0; }
   .key { margin-left: 8px; color: var(--ok); border: 1px solid currentColor; padding: 0 5px; font-size: 0.75rem; border-radius: var(--radius); }
@@ -387,10 +387,10 @@
   .mx .cell.s1 input, .mx .cell.warn input { border-color: var(--danger); background: var(--danger-soft); }
   .na { font-family: var(--serif); font-size: 2.6rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
   .na span { font-family: var(--sans); font-size: 1rem; font-weight: 400; }
-  .bar { position: relative; height: 8px; background: var(--surface-2); margin: 12px 0 2px; overflow: hidden; }
+  .bar { position: relative; height: 8px; background: var(--surface-2); margin: 12px 0 2px; overflow: hidden; border-radius: 4px; }
   .bar.thin { height: 4px; margin: 4px 0 8px; }
-  .fill { height: 100%; background: var(--text); transition: width 0.2s; }
-  .bar i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+  .fill { height: 100%; background: var(--accent); border-radius: inherit; transition: width 0.2s; }
+  .bar i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--text); }
   .ticks { position: relative; height: 16px; font-family: var(--mono); }
   .ticks span { position: absolute; transform: translateX(-50%); }
   .status { margin: 10px 0 4px; padding: 6px 10px; border-left: 3px solid currentColor; font-weight: 600; }

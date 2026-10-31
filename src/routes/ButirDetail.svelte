@@ -31,7 +31,10 @@
 <article>
   <div class="head">
     <div>
-      <div class="label">{kriteriaNama}{butir.tahapNo ? ` · ${TAHAP[butir.tahapNo - 1]}` : ''} · butir {butir.no}</div>
+      <div class="label">
+        {kriteriaNama}
+        {#if butir.tahapNo}<span class="tahap" style="--c: var(--t{butir.tahapNo})">{TAHAP[butir.tahapNo - 1]}</span>{/if}
+      </div>
       <h2>{butir.kode}</h2>
       <span class="jenis {butir.jenis}">{JENIS[butir.jenis]}</span>
     </div>
@@ -129,13 +132,18 @@
 <style>
   section { margin-top: 28px; }
   h3 { border-bottom: 1px solid var(--border); padding-bottom: 4px; }
-  .head { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 1px solid var(--text); }
-  .head h2 { font-family: var(--mono); font-size: 2.1rem; font-weight: 600; margin: 4px 0 2px; letter-spacing: -0.02em; }
-  .weight { display: flex; gap: 22px; margin: 0; align-items: flex-end; }
-  .weight dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-  .weight dd { margin: 0; font-variant-numeric: tabular-nums; }
-  .weight .big { font-family: var(--serif); font-size: 2rem; font-weight: 700; line-height: 1.1; }
-  .alur { margin-top: 20px; padding: 14px 16px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+  .head { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .head .label { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tahap {
+    color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent);
+    padding: 1px 9px; border-radius: 999px; font-weight: 600; font-size: 0.78rem;
+  }
+  .head h2 { font-size: 2.3rem; font-weight: 700; margin: 6px 0 4px; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .weight { display: flex; gap: 26px; margin: 0; align-items: flex-end; }
+  .weight dt { font-size: 0.78rem; color: var(--muted); }
+  .weight dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .weight .big { font-size: 2.1rem; font-weight: 700; line-height: 1.1; color: var(--accent); }
+  .alur { margin-top: 22px; padding: 16px 18px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); }
   .alur .label { margin-bottom: 12px; }
   .sambung { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 0.92rem; }
   .panduan { border-left: 3px solid var(--accent); padding: 2px 0 2px 16px; }
@@ -146,19 +154,24 @@
   .unggul p { margin: 4px 0 0; }
   /* Garis antarsel dibentuk oleh gap 1px di atas latar warna border */
   .rubrik {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
-    background: var(--border); border: 1px solid var(--border); border-radius: var(--radius);
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; overflow: hidden;
+    background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg);
   }
-  .lvl { padding: 10px 14px; font-size: 0.9rem; background: var(--surface); }
+  .lvl { padding: 12px 16px; font-size: 0.9rem; background: var(--surface); }
   .lh { margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .sk { font-family: var(--mono); width: 24px; height: 24px; display: grid; place-items: center; border: 1px solid currentColor; }
+  .sk { width: 26px; height: 26px; display: grid; place-items: center; border-radius: var(--radius); font-weight: 700; color: var(--surface) !important; background: var(--c); }
+  .s4 { --c: var(--ok); } .s3 { --c: var(--i); } .s2 { --c: var(--p); } .s1 { --c: var(--danger); }
   .s4 .sk { color: var(--ok); }
   .s3 .sk { color: var(--i); }
   .s2 .sk { color: var(--p); }
   .s1 .sk { color: var(--danger); }
   .narasi .nh { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
   .narasi .nh h3 { border: 0; margin: 0; }
-  .ntext { font-family: var(--serif); font-size: 1.02rem; line-height: 1.65; padding: 4px 0 0 16px; border-left: 1px solid var(--border); }
+  /* Contoh narasi diset seperti dokumen LED: serif bacaan, baris lebih lega */
+  .ntext {
+    font-family: var(--read); font-size: 0.98rem; line-height: 1.75; max-width: 72ch;
+    padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  }
   select { padding: 3px 8px; margin-left: 6px; }
   @media (max-width: 600px) { .rubrik { grid-template-columns: 1fr; } }
 </style>

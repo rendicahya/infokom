@@ -28,10 +28,12 @@
           <td class="num">{j.butir.length}</td>
           <td class="num">{fmt(j.totalBobot)}</td>
           <td class="muted">{j.kriteria.some((k) => k.id === 'suplemen') ? 'Ada' : 'Tidak ada'}</td>
-          <td class="go">
-            <a href={href(j.id, 'butir')}>Butir</a>
-            <a href={href(j.id, 'panduan')}>Panduan</a>
-            <a href={href(j.id, 'kalkulator')}>Kalkulator</a>
+          <td>
+            <div class="go">
+              <a href={href(j.id, 'butir')}>Butir</a>
+              <a href={href(j.id, 'panduan')}>Panduan</a>
+              <a href={href(j.id, 'kalkulator')}>Kalkulator</a>
+            </div>
           </td>
         </tr>
       {/each}
@@ -87,14 +89,16 @@
   .intro p { font-size: 1.05rem; margin: 0; }
   .jj { margin-bottom: 36px; }
   .jj td { padding: 11px 10px; vertical-align: middle; }
-  .nama { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--text); }
+  .nama { font-size: 1.08rem; font-weight: 700; color: var(--text); text-decoration: none; }
+  .nama:hover { color: var(--accent); }
   .go { display: flex; gap: 14px; justify-content: flex-end; flex-wrap: wrap; }
   .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; margin-bottom: 36px; }
   dl { display: grid; grid-template-columns: 76px 1fr; gap: 8px 12px; margin: 0; }
   dt { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); padding-top: 2px; }
   dd { margin: 0; }
-  .formula { font-family: var(--mono); font-size: 1.05rem; border-left: 3px solid var(--accent); padding: 4px 12px; background: var(--surface); }
-  .ppepp { border-top: 1px solid var(--text); padding-top: 20px; }
+  .formula { font-size: 1.1rem; font-weight: 600; border-left: 3px solid var(--accent); padding: 8px 14px; background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0; }
+  dt { font-weight: 700; }
+  .ppepp { border-top: 1px solid var(--border-strong); padding-top: 20px; }
   .ppepp > p { max-width: 75ch; }
   .ppepp .label { margin: 18px 0 6px; }
   @media (max-width: 760px) { .cols { grid-template-columns: 1fr; gap: 20px; } }

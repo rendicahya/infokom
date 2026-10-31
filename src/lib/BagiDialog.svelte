@@ -52,7 +52,7 @@
 
 <style>
   dialog {
-    padding: 0; border: 1px solid var(--text); border-radius: var(--radius);
+    padding: 0; border: 1px solid var(--border-strong); border-radius: var(--radius);
     background: var(--bg); color: var(--text); max-width: calc(100vw - 32px); outline: none;
   }
   dialog::backdrop { background: rgb(0 0 0 / 0.6); }

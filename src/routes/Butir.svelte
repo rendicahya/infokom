@@ -96,7 +96,11 @@
           {#each s.list as b}
             <a class="item" class:active={b.no === selected} class:inalur={!!s.judul} href={href(jenjang.id, 'butir', b.no)}>
               <span class="kode">{b.kode}</span>
-              <span class="txt">{s.judul ? TAHAP[b.tahapNo - 1] : ringkas(b)}</span>
+              {#if s.judul}
+                <span class="txt tahap" style="--c: var(--t{b.tahapNo})">{TAHAP[b.tahapNo - 1]}</span>
+              {:else}
+                <span class="txt">{ringkas(b)}</span>
+              {/if}
               <span class="meta"><span class="jenis {b.jenis}">{b.jenis}</span><span>{fmt(b.bobot)}</span></span>
             </a>
           {/each}
@@ -156,7 +160,7 @@
     position: sticky; top: 108px; max-height: calc(100vh - 124px); overflow-y: auto;
     border-right: 1px solid var(--border); padding-right: 4px;
   }
-  .filters { position: sticky; top: 0; background: var(--bg); padding: 0 8px 10px 0; border-bottom: 1px solid var(--text); z-index: 1; }
+  .filters { position: sticky; top: 0; background: var(--bg); padding: 0 8px 12px 0; border-bottom: 1px solid var(--border-strong); z-index: 1; }
   .filters input, .filters select { width: 100%; padding: 6px 9px; }
   .row { display: flex; gap: 6px; margin-top: 6px; }
   .seg { display: flex; align-items: center; gap: 4px; margin-top: 8px; }
@@ -167,11 +171,11 @@
   }
   .seg button.on { border-color: var(--text); color: var(--text); font-weight: 600; }
   .ghead {
-    display: flex; justify-content: space-between; padding: 16px 8px 4px 0; font-family: var(--serif);
-    font-weight: 600; font-size: 1rem; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; padding: 16px 8px 4px 0;
+    font-weight: 700; font-size: 0.92rem; border-bottom: 1px solid var(--border);
   }
   .ghead .mono { font-size: 0.8rem; color: var(--muted); font-weight: 400; }
-  .ghead.induk { border-bottom-color: var(--text); }
+  .ghead.induk { border-bottom-color: var(--border-strong); }
   .group.anak { margin-left: 12px; padding-left: 10px; border-left: 1px solid var(--border); }
   .group.anak .ghead { font-size: 0.95rem; padding-top: 12px; }
   .shead { font-size: 0.78rem; color: var(--muted); padding: 10px 8px 2px 0; }
@@ -181,15 +185,17 @@
     border-left: 2px solid transparent;
   }
   .item.inalur { padding-top: 3px; padding-bottom: 3px; }
+  .item { border-radius: 0 var(--radius) var(--radius) 0; }
   .item:hover { background: var(--surface-2); }
-  .item.active { background: var(--surface); border-left-color: var(--accent); }
+  .item.active { background: var(--accent-soft); border-left-color: var(--accent); }
   .kode { font-family: var(--mono); font-weight: 600; white-space: nowrap; }
   .txt { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--muted); }
   .item.active .txt { color: var(--text); }
+  .txt.tahap, .item.active .txt.tahap { color: var(--c); font-weight: 600; }
   .meta { display: flex; gap: 8px; align-items: baseline; font-variant-numeric: tabular-nums; }
   .empty { padding: 12px 0; }
   .back { display: none; margin-bottom: 12px; }
-  .pager { display: flex; justify-content: space-between; margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--text); }
+  .pager { display: flex; justify-content: space-between; margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--border-strong); }
   .pager a { display: flex; flex-direction: column; font-family: var(--mono); font-weight: 600; text-decoration: none; color: var(--text); }
   .pager a:hover { color: var(--accent); }
   .pager .next { text-align: right; }
