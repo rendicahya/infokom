@@ -19,8 +19,9 @@
   <h1>Panduan penyusunan LED</h1>
   <p class="lead">
     Isi Instrumen LED, per bagian. Setiap kriteria dibuka dengan peta alur PPEPP, lalu panduan per tahap yang ditautkan ke
-    butir penilaian beserta bobotnya. Di bagian Kriteria, <mark class="sama">teks bersorot</mark> adalah bagian kalimat
-    yang sama pada butir berhuruf sama di semua tahap PPEPP.
+    butir penilaian beserta bobotnya. Di bagian Kriteria, teks bersorot adalah bagian kalimat yang sama pada butir berhuruf
+    sama di semua tahap PPEPP, dengan warna berbeda per huruf: <mark class="sama w0">A</mark> <mark class="sama w1">B</mark>
+    <mark class="sama w2">C</mark> <mark class="sama w3">D</mark>.
   </p>
 
   <h2 class="part">Bagian Kesatu · Kerangka Konseptual</h2>
@@ -144,10 +145,16 @@
     margin: 6px 0; color: var(--text); font-size: 0.9rem; text-decoration: none;
   }
   .link:hover { border-color: var(--accent); }
+  /* Pastel terang per huruf butir; teks gelap agar tetap terbaca di mode gelap */
   .wrap :global(mark.sama) {
-    background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit;
+    background: #fff3a6; color: #1d2430;
     border-radius: 3px; padding: 0 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
   }
+  .wrap :global(mark.sama.w1) { background: #c9f2cf; }
+  .wrap :global(mark.sama.w2) { background: #cfe5ff; }
+  .wrap :global(mark.sama.w3) { background: #ffd6e7; }
+  .wrap :global(mark.sama.w4) { background: #ffe1c2; }
+  .wrap :global(mark.sama.w5) { background: #e4d9ff; }
   .w { font-weight: 600; font-variant-numeric: tabular-nums; }
   @media (max-width: 600px) {
     details > :global(*:not(summary)) { margin-left: 0; }

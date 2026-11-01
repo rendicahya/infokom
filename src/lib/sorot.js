@@ -57,9 +57,11 @@ export function sorotButir(k, idx, huruf) {
   // Dibandingkan dengan semua tahap lain yang memiliki butir berhuruf sama.
   const lain = k.tahap.filter((t, i) => i !== idx).map((t) => t.items[huruf]).filter(Boolean);
   if (!teks || !lain.length) return esc(teks);
+  // Warna dibedakan per huruf butir (A, B, C, …); berulang setelah 6 warna.
+  const warna = ((huruf.charCodeAt(0) - 65) % 6 + 6) % 6;
   let html = '', pos = 0;
   for (const [a, b] of rentangSama(teks, lain)) {
-    html += esc(teks.slice(pos, a)) + '<mark class="sama">' + esc(teks.slice(a, b)) + '</mark>';
+    html += esc(teks.slice(pos, a)) + `<mark class="sama w${warna}">` + esc(teks.slice(a, b)) + '</mark>';
     pos = b;
   }
   return html + esc(teks.slice(pos));
