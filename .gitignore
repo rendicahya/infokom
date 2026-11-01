@@ -153,3 +153,7 @@ vite.config.ts.timestamp-*
 
 # Narasi berisi data internal: hanya versi terenkripsi (public/narasi.enc.json) yang di-commit
 internal/
+# Data internal sumber narasi (LKPS dan sejenisnya)
+*.xlsx
+*.xls
+*.csv
