@@ -201,9 +201,9 @@
       </div>
     </div>
 
-    {#snippet input(b, s)}
+    {#snippet input(b, s, step = '0.01')}
       <input
-        type="number" min="0" max="4" step="0.01" value={s ?? ''} placeholder="–"
+        type="number" min="0" max="4" {step} value={s ?? ''} placeholder="–"
         aria-label="Skor {b.kode}"
         onkeydown={(e) => [',', 'e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
         onpaste={(e) => /[^\d.]/.test(e.clipboardData.getData('text').trim()) && e.preventDefault()}
@@ -240,7 +240,8 @@
                       {@const s = skor[b.no]}
                       <td class="cell {warna(s)}" class:warn={k.syaratUnggul && s != null && s < MIN_BUTIR}>
                         <a class="mono" href={href(jenjang.id, 'butir', b.no)} title="Bobot {fmt(b.bobot)}">{b.kode}</a>
-                        {@render input(b, s)}
+                        <!-- Langkah 1 agar panah/scroll di sel matriks langsung berpindah antarskor bulat -->
+                        {@render input(b, s, '1')}
                       </td>
                     {/each}
                     <td class="num mono">{fmt(nilaiAlur(a))}<span class="muted"> / {fmt(a.bobot)}</span></td>
