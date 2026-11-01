@@ -34,8 +34,10 @@
     <Md text={sectionMarkdown(led.pendahuluan)} />
   </details>
 
-  <h3 class="sub">II. Laporan Evaluasi Diri</h3>
+  <!-- II sejajar dengan I; A–D menjorok di bawahnya -->
+  <h3 class="induk">II. Laporan Evaluasi Diri</h3>
 
+  <div class="anak">
   {#each [led.kondisiEksternal, led.profil] as node, i}
     {@const b = jenjang.butir[i]}
     <details class="card">
@@ -95,6 +97,7 @@
       {/each}
     </details>
   {/if}
+  </div>
 
   {#if led.penutup}
     <details class="card">
@@ -118,8 +121,13 @@
   summary::before { content: '+'; position: absolute; left: 4px; font-family: var(--mono); color: var(--accent); }
   details[open] > summary::before { content: '−'; }
   summary:hover { color: var(--accent); }
-  .sub { margin: 24px 0 0; padding-bottom: 4px; font-size: 1rem; color: var(--muted); border-bottom: 1px solid var(--border); }
+  /* Induk tak bisa dilipat, tetapi teksnya sejajar dengan judul bagian lain (I. Pendahuluan, III. Penutup) */
+  .induk {
+    margin: 0; padding: 12px 0 12px 26px; border-bottom: 1px solid var(--border);
+    font-family: var(--serif); font-size: 1.08rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--text);
+  }
   .anak { margin-left: 26px; border-left: 1px solid var(--border); padding-left: 0; }
+  .anak .anak { margin-left: 30px; }
   .anak > details.card > summary { padding-left: 30px; }
   .anak > details.card > summary::before { left: 10px; }
   .anak > details.card { border-bottom-style: dashed; }
@@ -142,6 +150,8 @@
     .tag { display: block; margin: 2px 0 0; }
     .part { font-size: 1.15rem; }
     .anak { margin-left: 10px; }
+    .anak .anak { margin-left: 16px; }
+    .induk { font-size: 1rem; padding-top: 13px; padding-bottom: 13px; }
     .link { grid-template-columns: auto 1fr auto; } .link .t { grid-column: 1 / -1; grid-row: 2; }
   }
 </style>
