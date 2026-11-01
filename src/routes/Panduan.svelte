@@ -145,16 +145,6 @@
     margin: 6px 0; color: var(--text); font-size: 0.9rem; text-decoration: none;
   }
   .link:hover { border-color: var(--accent); }
-  /* Pastel terang per huruf butir; teks gelap agar tetap terbaca di mode gelap */
-  .wrap :global(mark.sama) {
-    background: #fff3a6; color: #1d2430;
-    border-radius: 3px; padding: 0 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
-  }
-  .wrap :global(mark.sama.w1) { background: #c9f2cf; }
-  .wrap :global(mark.sama.w2) { background: #cfe5ff; }
-  .wrap :global(mark.sama.w3) { background: #ffd6e7; }
-  .wrap :global(mark.sama.w4) { background: #ffe1c2; }
-  .wrap :global(mark.sama.w5) { background: #e4d9ff; }
   .w { font-weight: 600; font-variant-numeric: tabular-nums; }
   @media (max-width: 600px) {
     details > :global(*:not(summary)) { margin-left: 0; }

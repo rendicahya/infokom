@@ -130,6 +130,16 @@ button, input, select { font: inherit; color: inherit; }
 .chip.P, .jenis.P { color: var(--p); }
 .chip.O, .jenis.O { color: var(--o); }
 
+/* Bagian kalimat yang sama di seluruh tahap PPEPP: pastel terang per huruf butir, teks gelap agar terbaca di mode gelap */
+mark.sama {
+  background: #fff3a6; color: #1d2430;
+  border-radius: 3px; padding: 0 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+mark.sama.w1 { background: #c9f2cf; }
+mark.sama.w2 { background: #cfe5ff; }
+mark.sama.w3 { background: #ffd6e7; }
+mark.sama.w4 { background: #ffe1c2; }
+mark.sama.w5 { background: #e4d9ff; }
 .prose { overflow-wrap: anywhere; }
 .prose p { margin: 0 0 0.8em; }
 .prose ul, .prose ol { padding-left: 1.4em; margin: 0 0 0.8em; }

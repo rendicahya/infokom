@@ -55,14 +55,40 @@ function rentangSama(teks, lain) {
 export function sorotButir(k, idx, huruf) {
   const teks = k.tahap[idx]?.items[huruf] || '';
   // Dibandingkan dengan semua tahap lain yang memiliki butir berhuruf sama.
-  const lain = k.tahap.filter((t, i) => i !== idx).map((t) => t.items[huruf]).filter(Boolean);
-  if (!teks || !lain.length) return esc(teks);
+  const lain = k.tahap.filter((t, i) => i !== idx).map((t) => t.items[huruf]);
+  return sorot(teks, lain, huruf);
+}
+
+/**
+ * Menyisipkan <mark> pada bagian `teks` yang sama dengan teks-teks `lain`.
+ * md=false: hasil berupa HTML (teks di-escape). md=true: hasil tetap markdown, sorotan dipecah per baris
+ * dan tidak mencakup penanda daftar/kutipan di awal baris, agar struktur markdown tidak rusak.
+ */
+export function sorot(teks, lain, huruf, md = false) {
+  teks = teks || '';
+  lain = lain.filter(Boolean);
+  const e = md ? (s) => s : esc;
+  if (!teks || !lain.length || !huruf) return e(teks);
   // Warna dibedakan per huruf butir (A, B, C, …); berulang setelah 6 warna.
-  const warna = ((huruf.charCodeAt(0) - 65) % 6 + 6) % 6;
-  let html = '', pos = 0;
+  const buka = `<mark class="sama w${(((huruf.charCodeAt(0) - 65) % 6) + 6) % 6}">`;
+  const bungkus = (s) =>
+    md
+      ? s.split('\n').map((baris) => baris.replace(/^(\s*(?:[-*+>]\s+|\d+[.)]\s+)*)(.*?)(\s*)$/, (_, p, isi, q) => (isi ? p + buka + isi + '</mark>' + q : p + q))).join('\n')
+      : buka + esc(s) + '</mark>';
+  let out = '', pos = 0;
   for (const [a, b] of rentangSama(teks, lain)) {
-    html += esc(teks.slice(pos, a)) + `<mark class="sama w${warna}">` + esc(teks.slice(a, b)) + '</mark>';
+    out += e(teks.slice(pos, a)) + bungkus(teks.slice(a, b));
     pos = b;
   }
-  return html + esc(teks.slice(pos));
+  return out + e(teks.slice(pos));
+}
+
+/** Butir lain dalam kriteria yang sama, berhuruf sama, di tahap PPEPP lain (satu per tahap). */
+export function saudara(semua, b) {
+  if (!b.kriteriaNo || !b.huruf || !b.tahapNo || b.kriteria === 'suplemen' || b.kriteria === 'profil') return [];
+  const perTahap = new Map();
+  for (const x of semua)
+    if (x !== b && x.kriteria === b.kriteria && x.huruf === b.huruf && x.tahapNo !== b.tahapNo && !perTahap.has(x.tahapNo))
+      perTahap.set(x.tahapNo, x);
+  return [...perTahap.values()];
 }
