@@ -4,6 +4,7 @@
   import { sectionMarkdown } from '../lib/parse.js';
   import { href } from '../lib/router.svelte.js';
   import { fmt } from '../lib/data.js';
+  import { asing } from '../lib/asing.js';
 
   let { jenjang } = $props();
   let led = $derived(jenjang.led);
@@ -23,7 +24,7 @@
   <h2 class="part">Bagian Kesatu · Kerangka Konseptual</h2>
   {#each led.bagian1.children as s}
     <details class="card">
-      <summary>{s.title}</summary>
+      <summary>{@html asing(s.title)}</summary>
       <Md text={sectionMarkdown(s)} />
     </details>
   {/each}
@@ -34,14 +35,14 @@
     <Md text={sectionMarkdown(led.pendahuluan)} />
   </details>
 
-  <!-- II sejajar dengan I; A–D menjorok di bawahnya -->
-  <h3 class="induk">II. Laporan Evaluasi Diri</h3>
-
+  <!-- II sejajar dengan I dan bisa dilipat; A–D menjorok di bawahnya -->
+  <details class="card induk">
+  <summary>II. Laporan Evaluasi Diri</summary>
   <div class="anak">
   {#each [led.kondisiEksternal, led.profil] as node, i}
     {@const b = jenjang.butir[i]}
     <details class="card">
-      <summary>{node.title} <a class="tag" href={href(jenjang.id, 'butir', b.no)}>Butir {b.kode} · bobot {fmt(b.bobot)}</a></summary>
+      <summary>{@html asing(node.title)} <a class="tag" href={href(jenjang.id, 'butir', b.no)}>Butir {b.kode} · bobot {fmt(b.bobot)}</a></summary>
       <Md text={sectionMarkdown(node)} />
     </details>
   {/each}
@@ -57,7 +58,7 @@
     {@const total = butirKriteria(k.no).reduce((a, b) => a + b.bobot, 0)}
     {@const alur = jenjang.alur.filter((a) => a.kriteria === 'k' + k.no)}
     <details class="card">
-      <summary>C.{k.no} {k.judul} <span class="tag">bobot {fmt(total)}</span></summary>
+      <summary>C.{k.no} {@html asing(k.judul)} <span class="tag">bobot {fmt(total)}</span></summary>
       <Md text={k.intro} />
       {#if alur.length}
         <div class="peta">
@@ -67,13 +68,13 @@
       {/if}
       {#each k.tahap as t}
         <div class="tahap">
-          <h4>{t.judul}</h4>
+          <h4>{@html asing(t.judul)}</h4>
           <Md text={t.intro} />
           {#each butirTahap(k.no, t.no) as b}
             <a class="link" href={href(jenjang.id, 'butir', b.no)}>
               <span class="jenis {b.jenis}">{b.jenis}</span>
               <b class="mono">{b.kode}</b>
-              <span class="t">{t.items[b.huruf] || ''}</span>
+              <span class="t">{@html asing(t.items[b.huruf] || '')}</span>
               <span class="w">{fmt(b.bobot)}</span>
             </a>
           {/each}
@@ -91,17 +92,18 @@
         {#if led.suplemen.bidang.length > 1}<h4>Bidang {bd.nama}</h4>{/if}
         <ol>
           {#each bd.items as it}
-            <li><b>{it.judul}</b><Md text={it.isi} /></li>
+            <li><b>{@html asing(it.judul)}</b><Md text={it.isi} /></li>
           {/each}
         </ol>
       {/each}
     </details>
   {/if}
   </div>
+  </details>
 
   {#if led.penutup}
     <details class="card">
-      <summary>{led.penutup.title}</summary>
+      <summary>{@html asing(led.penutup.title)}</summary>
       <Md text={led.penutup.body} />
     </details>
   {/if}
@@ -121,11 +123,8 @@
   summary::before { content: '+'; position: absolute; left: 4px; font-family: var(--mono); color: var(--accent); }
   details[open] > summary::before { content: '−'; }
   summary:hover { color: var(--accent); }
-  /* Induk tak bisa dilipat, tetapi teksnya sejajar dengan judul bagian lain (I. Pendahuluan, III. Penutup) */
-  .induk {
-    margin: 0; padding: 12px 0 12px 26px; border-bottom: 1px solid var(--border);
-    font-family: var(--serif); font-size: 1.08rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--text);
-  }
+  /* II membungkus A–D; garis kiri .anak sudah menandai akhir isinya */
+  details.induk[open] { padding-bottom: 0; }
   .anak { margin-left: 26px; border-left: 1px solid var(--border); padding-left: 0; }
   .anak .anak { margin-left: 30px; }
   .anak > details.card > summary { padding-left: 30px; }
@@ -151,7 +150,6 @@
     .part { font-size: 1.15rem; }
     .anak { margin-left: 10px; }
     .anak .anak { margin-left: 16px; }
-    .induk { font-size: 1rem; padding-top: 13px; padding-bottom: 13px; }
     .link { grid-template-columns: auto 1fr auto; } .link .t { grid-column: 1 / -1; grid-row: 2; }
   }
 </style>
