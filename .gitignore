@@ -150,3 +150,6 @@ vite.config.ts.timestamp-*
 
 # Dokumen sumber PDF (tidak dipublikasikan)
 *.pdf
+
+# Narasi berisi data internal: hanya versi terenkripsi (public/narasi.enc.json) yang di-commit
+internal/

@@ -1,0 +1,9 @@
+{
+  "_petunjuk": "Salin ke internal/narasi.json. Kunci: id jenjang (sarjana, magister, doktor), lalu nomor butir seperti di URL (#/sarjana/butir/3 -> \"3\") atau kode butir (\"1.1 A\"). Isi berupa markdown.",
+  "sarjana": {
+    "3": "**Kebijakan mutu.** Isi narasi dengan data internal di sini.\n\n- Poin pertama\n- Poin kedua",
+    "1.2 A": "Narasi untuk butir 1.2 A."
+  },
+  "magister": {},
+  "doktor": {}
+}

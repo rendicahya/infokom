@@ -6,11 +6,15 @@
   import { getNarasi } from '../lib/narasi.js';
   import { kesinambungan } from '../lib/alur.js';
   import { sorot, saudara } from '../lib/sorot.js';
+  import { rahasia, narasiInternal } from '../lib/rahasia.svelte.js';
 
   let { jenjang, butir } = $props();
 
   let persen = $derived((butir.bobot / jenjang.totalBobot) * 100);
-  let narasi = $derived(getNarasi(jenjang, butir));
+  // Contoh narasi hanya tampil setelah password dimasukkan; data internal didahulukan, ilustrasi sebagai cadangan
+  let terbuka = $derived(!!rahasia.data);
+  let internal = $derived(terbuka ? narasiInternal(jenjang, butir) : null);
+  let narasi = $derived(terbuka ? internal ?? getNarasi(jenjang, butir) : null);
   let kriteriaNama = $derived(jenjang.kriteria.find((k) => k.id === butir.kriteria)?.nama);
   // Butir berhuruf sama di tahap PPEPP lain, untuk menyorot bagian kalimat yang sama
   let sdr = $derived(saudara(jenjang.butir, butir));
@@ -104,12 +108,18 @@
         <h3>Contoh narasi</h3>
         <button class="btn small no-print" onclick={salin}>{copied ? 'Tersalin' : 'Salin teks'}</button>
       </div>
-      <p class="muted small">
-        Ilustrasi untuk {jenjang.konteks.ps} FILKOM UB. Angka, nomor dokumen, dan nama mitra bersifat ilustratif, bukan data
-        resmi; ganti dengan data PS dan pastikan konsisten dengan LKPS.
-      </p>
+      {#if internal}
+        <p class="muted small">Berisi data internal. Jangan disebarkan di luar pihak yang berwenang.</p>
+      {:else}
+        <p class="muted small">
+          Ilustrasi untuk {jenjang.konteks.ps} FILKOM UB. Angka, nomor dokumen, dan nama mitra bersifat ilustratif, bukan data
+          resmi; ganti dengan data PS dan pastikan konsisten dengan LKPS.
+        </p>
+      {/if}
       <div class="ntext"><Md text={narasi} /></div>
     </section>
+  {:else if !terbuka}
+    <p class="muted small terkunci no-print">Contoh narasi tersedia setelah memasukkan password melalui tombol gembok di kanan atas.</p>
   {/if}
 
   <section>
@@ -176,6 +186,7 @@
     padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
   }
   select { padding: 3px 8px; margin-left: 6px; }
+  .terkunci { margin-top: 28px; padding: 10px 14px; border: 1px dashed var(--border-strong); border-radius: var(--radius); }
   @media (max-width: 600px) {
     section { margin-top: 24px; }
     .rubrik { grid-template-columns: 1fr; }

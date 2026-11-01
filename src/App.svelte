@@ -7,8 +7,10 @@
   import Kalkulator from './routes/Kalkulator.svelte';
   import Rekap from './routes/Rekap.svelte';
   import BagiDialog from './lib/BagiDialog.svelte';
+  import KunciDialog from './lib/KunciDialog.svelte';
+  import { rahasia } from './lib/rahasia.svelte.js';
 
-  let bagi;
+  let bagi, kunciDlg;
 
   // Label pendek dipakai di layar sempit agar keempat tab muat tanpa digeser
   const PAGES = [
@@ -92,6 +94,13 @@
       </button>
     </div>
     <div class="tools">
+      <button class:on={rahasia.data} onclick={() => kunciDlg.buka()} title={rahasia.data ? 'Narasi internal terbuka' : 'Buka narasi internal (password)'} aria-label={rahasia.data ? 'Narasi internal terbuka' : 'Buka narasi internal'}>
+        {#if rahasia.data}
+          <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 7.5-2" /></svg>
+        {:else}
+          <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+        {/if}
+      </button>
       <button onclick={() => bagi.buka()} title="Bagikan tautan dan QR code aplikasi" aria-label="Bagikan">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><path d="M14 14h3v3h-3zM20 14v1M14 20h1M17 17h4v4h-4" /></svg>
       </button>
@@ -123,6 +132,7 @@
 </header>
 
 <BagiDialog bind:this={bagi} />
+<KunciDialog bind:this={kunciDlg} />
 
 <main class="container">
   {#if !jenjang}
@@ -140,8 +150,8 @@
 
 <footer class="container no-print">
   <p>
-    Disusun dari Instrumen LED dan Matriks Penilaian Kinerja Program Studi LAM INFOKOM 2.1 (2025). Contoh narasi bersifat
-    ilustratif. Bukan situs resmi LAM INFOKOM; selalu rujuk dokumen asli.
+    Disusun dari Instrumen LED dan Matriks Penilaian Kinerja Program Studi LAM INFOKOM 2.1 (2025). Contoh narasi hanya
+    tersedia bagi pengguna berpassword. Bukan situs resmi LAM INFOKOM; selalu rujuk dokumen asli.
   </p>
 </footer>
 
@@ -165,6 +175,7 @@
     background: transparent; border: 1px solid transparent; border-radius: var(--radius); color: var(--muted);
   }
   .tools button:hover { color: var(--text); background: var(--surface-2); }
+  .tools button.on { color: var(--accent); }
   .tools button:disabled { opacity: 0.35; cursor: default; background: transparent; }
   .tools .pct { width: auto; min-width: 46px; font-size: 0.78rem; font-weight: 600; font-variant-numeric: tabular-nums; }
   .tools svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
