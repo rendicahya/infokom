@@ -19,7 +19,7 @@
     <tbody>
       {#each alur as a}
         <tr>
-          <td class="topik"><span class="mono">{a.label}</span><span>{a.judul}</span></td>
+          <td class="topik"><div><span class="mono">{a.label}</span><span>{a.judul}</span></div></td>
           {#each TAHAP as _, i}
             {@const b = a.butir[i]}
             <td class="cell" class:end={i === TAHAP.length - 1} style="--c: var(--t{i + 1})">
@@ -46,7 +46,13 @@
     display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; margin-right: 2px;
     background: var(--c); color: var(--surface); font-size: 0.7rem; font-weight: 700;
   }
-  .topik { display: flex; flex-direction: column; line-height: 1.3; min-width: 170px; }
+  .topik div { display: flex; flex-direction: column; line-height: 1.3; min-width: 170px; }
+  /* Kolom alur tetap terlihat saat matriks digeser horizontal di layar sempit */
+  .topik, .mx thead th:first-child { position: sticky; left: 0; z-index: 2; background: var(--bg); }
+  @media (max-width: 640px) {
+    .topik div { min-width: 112px; max-width: 132px; font-size: 0.8rem; }
+    .topik { box-shadow: 1px 0 0 var(--border); }
+  }
   .topik .mono { font-size: 0.78rem; color: var(--muted); }
   .cell { position: relative; padding: 4px; }
   .cell:not(.end)::after {

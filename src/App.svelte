@@ -10,15 +10,22 @@
 
   let bagi;
 
+  // Label pendek dipakai di layar sempit agar keempat tab muat tanpa digeser
   const PAGES = [
-    { id: 'butir', label: 'Butir & Rubrik' },
-    { id: 'panduan', label: 'Panduan LED' },
-    { id: 'kalkulator', label: 'Kalkulator' },
-    { id: 'rekap', label: 'Rekap Bobot' },
+    { id: 'butir', label: 'Butir & Rubrik', pendek: 'Butir' },
+    { id: 'panduan', label: 'Panduan LED', pendek: 'Panduan' },
+    { id: 'kalkulator', label: 'Kalkulator', pendek: 'Kalkulator' },
+    { id: 'rekap', label: 'Rekap Bobot', pendek: 'Rekap' },
   ];
 
   let jenjang = $derived(getJenjang(route.jenjang));
   let page = $derived(jenjang ? route.page || 'butir' : null);
+
+  // Tinggi header (berubah antara desktop dan HP) dipakai elemen sticky di halaman lain lewat --head
+  let tinggiHeader = $state(0);
+  $effect(() => {
+    document.documentElement.style.setProperty('--head', tinggiHeader + 'px');
+  });
 
   // Tema awal dipasang oleh skrip di index.html
   let theme = $state(document.documentElement.dataset.theme || 'light');
@@ -63,14 +70,16 @@
 
 <svelte:document onfullscreenchange={() => (full = !!document.fullscreenElement)} />
 
-<header class="no-print">
+<header class="no-print" bind:clientHeight={tinggiHeader}>
   <div class="container bar">
-    <a class="brand" href="#/">
+    <a class="brand" href="#/" aria-label="Beranda">
       <span class="mark">LED</span><span class="nm">Panduan LAM INFOKOM</span>
     </a>
     <nav class="jenjang" aria-label="Jenjang">
-      {#each JENJANG as j}
-        <a href={href(j.id, page || 'butir')} class:active={jenjang?.id === j.id}>{j.nama}</a>
+      {#each JENJANG as j, i}
+        <a href={href(j.id, page || 'butir')} class:active={jenjang?.id === j.id} title={j.nama}>
+          <span class="full">{j.nama}</span><span class="short" aria-hidden="true">S{i + 1}</span>
+        </a>
       {/each}
     </nav>
     <div class="tools zoom" role="group" aria-label="Zoom">
@@ -94,7 +103,7 @@
         {/if}
       </button>
       {#if bisaFull}
-        <button onclick={gantiFull} title={full ? 'Keluar layar penuh' : 'Layar penuh'} aria-label={full ? 'Keluar layar penuh' : 'Layar penuh'}>
+        <button class="full-btn" onclick={gantiFull} title={full ? 'Keluar layar penuh' : 'Layar penuh'} aria-label={full ? 'Keluar layar penuh' : 'Layar penuh'}>
           {#if full}
             <svg viewBox="0 0 24 24"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" /></svg>
           {:else}
@@ -107,7 +116,7 @@
   {#if jenjang}
     <nav class="container tabs" aria-label="Halaman">
       {#each PAGES as p}
-        <a href={href(jenjang.id, p.id)} class:active={page === p.id}>{p.label}</a>
+        <a href={href(jenjang.id, p.id)} class:active={page === p.id}><span class="full">{p.label}</span><span class="short">{p.pendek}</span></a>
       {/each}
     </nav>
   {/if}
@@ -174,9 +183,25 @@
   main { padding-top: 32px; padding-bottom: 56px; min-height: 70vh; }
   footer { padding-bottom: 32px; }
   footer p { border-top: 1px solid var(--border); padding-top: 14px; margin: 0; color: var(--muted); font-size: 0.8rem; max-width: 70ch; }
+  .short { display: none; }
   @media (max-width: 640px) {
+    .bar { height: 52px; gap: 8px; }
     .brand .nm { display: none; }
-    .jenjang a { padding: 3px 7px; }
-    .zoom { display: none; }
+    .jenjang a { padding: 4px 10px; }
+    /* Zoom dan layar penuh kurang berguna di HP (sudah ada pinch-zoom dan mode layar penuh peramban) */
+    .zoom, .tools .full-btn { display: none; }
+    .tools { padding-left: 4px; border-left: 0; }
+    .tools button { width: 38px; height: 38px; }
+    .tools svg { width: 19px; height: 19px; }
+    .tabs { gap: 0; justify-content: space-between; }
+    .tabs a { flex: 1; text-align: center; padding: 9px 4px 10px; }
+    .tabs .full { display: none; }
+    .tabs .short { display: inline; }
+    main { padding-top: 22px; padding-bottom: 40px; }
+  }
+  @media (max-width: 400px) {
+    .jenjang .full { display: none; }
+    .jenjang .short { display: inline; }
+    .jenjang a { padding: 4px 12px; }
   }
 </style>

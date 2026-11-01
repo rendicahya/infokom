@@ -25,10 +25,10 @@
       {#each JENJANG as j}
         <tr>
           <td><a class="nama" href={href(j.id, 'butir')}>{j.nama}</a></td>
-          <td class="num">{j.butir.length}</td>
-          <td class="num">{fmt(j.totalBobot)}</td>
-          <td class="muted">{j.kriteria.some((k) => k.id === 'suplemen') ? 'Ada' : 'Tidak ada'}</td>
-          <td>
+          <td class="num" data-l="butir">{j.butir.length}</td>
+          <td class="num" data-l="bobot">{fmt(j.totalBobot)}</td>
+          <td class="muted sup">{j.kriteria.some((k) => k.id === 'suplemen') ? 'Ada' : 'Tidak ada'}</td>
+          <td class="aksi">
             <div class="go">
               <a href={href(j.id, 'butir')}>Butir</a>
               <a href={href(j.id, 'panduan')}>Panduan</a>
@@ -102,4 +102,22 @@
   .ppepp > p { max-width: 75ch; }
   .ppepp .label { margin: 18px 0 6px; }
   @media (max-width: 760px) { .cols { grid-template-columns: 1fr; gap: 20px; } }
+  /* Di HP setiap jenjang menjadi kartu: nama + ringkasan angka, tautan di baris bawah */
+  @media (max-width: 640px) {
+    .intro { margin-bottom: 20px; }
+    .intro p { font-size: 1rem; }
+    .jj thead, .jj .sup { display: none; }
+    .jj, .jj tbody { display: block; }
+    .jj tr {
+      display: grid; grid-template-columns: 1fr auto auto; align-items: baseline; gap: 4px 16px;
+      padding: 14px 16px; margin-bottom: 10px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+    }
+    .jj td { padding: 0; border: 0; }
+    .jj td[data-l]::after { content: ' ' attr(data-l); color: var(--muted); font-size: 0.8rem; }
+    .jj .aksi { grid-column: 1 / -1; padding-top: 10px; margin-top: 6px; border-top: 1px solid var(--border); }
+    .go { justify-content: flex-start; gap: 8px; }
+    .go a { flex: 1; text-align: center; padding: 6px 0; border: 1px solid var(--border-strong); border-radius: var(--radius); text-decoration: none; font-size: 0.88rem; font-weight: 500; }
+    dl { grid-template-columns: 64px 1fr; }
+  }
 </style>

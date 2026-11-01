@@ -63,4 +63,9 @@
   .url { font: 600 clamp(1.3rem, 4vw, 2rem) var(--mono); color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
   .url b { color: var(--accent); }
   .aksi { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  @media (max-width: 480px) {
+    .box { padding: 20px 16px; }
+    .aksi { width: 100%; }
+    .aksi .btn { flex: 1; justify-content: center; }
+  }
 </style>

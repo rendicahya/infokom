@@ -137,6 +137,15 @@
   const nilaiAlur = (a) => a.butir.reduce((t, b) => t + (b ? (b.bobot * (skor[b.no] ?? 0)) / 4 : 0), 0);
   const ringkas = (b) => b.elemen.replace(/^\d\.\d\.?\s*\[[A-Z]+\]\s*/, '').replace(/^\d\.\d\s*/, '');
 
+  // Layar sempit: ringkasan ada di bawah daftar butir; bilah nilai di dasar layar disembunyikan saat ringkasan terlihat
+  let ringkasan;
+  let ringkasanTerlihat = $state(false);
+  $effect(() => {
+    const io = new IntersectionObserver(([e]) => (ringkasanTerlihat = e.isIntersecting));
+    io.observe(ringkasan);
+    return () => io.disconnect();
+  });
+
   const warna = (s) => (s == null ? '' : s >= 3.5 ? 's4' : s >= 3 ? 's3' : s >= 2 ? 's2' : 's1');
   const pct = (a, b) => (b ? Math.min(100, (a / b) * 100) : 0);
 </script>
@@ -260,7 +269,7 @@
     {/each}
   </div>
 
-  <aside class="summary">
+  <aside class="summary" bind:this={ringkasan}>
     <div class="card">
       <div class="muted small">Nilai akhir</div>
       <div class="na">{fmt(hasil.nilaiAkhir)}<span class="muted"> / {fmt(hasil.maks)}</span></div>
@@ -332,9 +341,20 @@
   </aside>
 </div>
 
+<button class="mini no-print" class:sembunyi={ringkasanTerlihat} onclick={() => ringkasan.scrollIntoView({ behavior: 'smooth' })}>
+  <span class="mn"><span class="muted">Nilai akhir</span> <b class="mono">{fmt(hasil.nilaiAkhir)}</b><span class="muted mono"> / {fmt(hasil.maks)}</span></span>
+  <span class="ms {hasil.status.kode}">{hasil.status.label}</span>
+  <span class="mr muted">{hasil.terisi}/{hasil.total} terisi · Rincian ↓</span>
+</button>
+
 <style>
   .layout { display: grid; grid-template-columns: 1fr 320px; gap: 36px; align-items: start; }
-  .summary { position: sticky; top: 108px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 124px); overflow-y: auto; }
+  /* min-width 0: tabel matriks yang lebar digeser di wadahnya, tidak melebarkan kolom grid */
+  .layout > * { min-width: 0; }
+  .summary {
+    position: sticky; top: calc(var(--head, 92px) + 16px); display: flex; flex-direction: column; gap: 12px;
+    max-height: calc(100vh - var(--head, 92px) - 32px); overflow-y: auto;
+  }
   .summary .card { padding: 16px; }
   .summary h3 { font-size: 1rem; }
   .toolbar { margin-bottom: 8px; }
@@ -376,7 +396,9 @@
   .sb.on.s1 { background: var(--danger); border-color: var(--danger); color: var(--bg); }
   input[type='number'] { width: 64px; padding: 4px 6px; text-align: right; font-family: var(--mono); }
   .mx { font-size: 0.85rem; min-width: 640px; }
-  .mx .topik { min-width: 150px; line-height: 1.3; }
+  .mx .topik { min-width: 150px; line-height: 1.3; position: sticky; left: 0; z-index: 2; background: var(--bg); }
+  .mx thead th:first-child { position: sticky; left: 0; z-index: 2; background: var(--bg); }
+  @media (max-width: 640px) { .mx .topik { min-width: 110px; max-width: 130px; font-size: 0.8rem; box-shadow: 1px 0 0 var(--border); } }
   .mx td.num { white-space: nowrap; }
   .mx .topik .mono { color: var(--muted); font-size: 0.78rem; display: block; }
   .mx .cell { padding: 6px 4px; }
@@ -404,13 +426,43 @@
   .checks li.ok::before { content: '✓'; color: var(--ok); }
   .kc .small { display: flex; justify-content: space-between; }
   .pot { padding-left: 1.2em; margin: 0; }
+  .mini { display: none; }
   @media (max-width: 960px) {
-    .layout { grid-template-columns: 1fr; }
-    .summary { position: static; max-height: none; order: -1; }
+    .layout { grid-template-columns: 1fr; gap: 28px; }
+    .summary { position: static; max-height: none; overflow: visible; scroll-margin-top: calc(var(--head, 92px) + 12px); }
+    .mini {
+      position: fixed; z-index: 9; left: 0; right: 0; bottom: 0;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; width: 100%;
+      padding: 10px max(16px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      background: var(--surface); border: 0; border-top: 1px solid var(--border-strong);
+      box-shadow: 0 -4px 16px rgb(0 0 0 / 0.08); text-align: left; cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .mini.sembunyi { transform: translateY(110%); }
+    .mn b { font-size: 1.25rem; }
+    .ms { font-size: 0.8rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; }
+    .ms.tidak { color: var(--danger); background: var(--danger-soft); }
+    .ms.terakreditasi { color: var(--p); background: var(--p-soft); }
+    .ms.unggul3, .ms.unggul5 { color: var(--o); background: var(--o-soft); }
+    .mr { margin-left: auto; font-size: 0.8rem; }
+    /* Ruang agar butir terakhir tidak tertutup bilah nilai */
+    .layout { padding-bottom: 72px; }
   }
   @media (max-width: 600px) {
-    .row { grid-template-columns: 50px 1fr; }
-    .row .jenis { justify-self: start; }
-    .score { grid-column: 1 / -1; }
+    .toolbar h1 { font-size: 1.5rem; }
+    .simpan { flex-wrap: wrap; }
+    .simpan input { flex-basis: 100%; padding: 8px 10px; }
+    .simpan .btn { flex: 1; justify-content: center; }
+    .daftar td.muted { display: none; }
+    .actions .seg { flex-basis: 100%; }
+    .actions .seg button { flex: 1; padding: 8px 6px; }
+    .sp { display: none; }
+    .row { grid-template-columns: 50px 1fr auto; gap: 4px 10px; padding: 10px 0; }
+    .row .jenis { justify-self: end; }
+    .score { grid-column: 1 / -1; gap: 6px; }
+    /* Tombol skor melebar mengisi baris agar mudah diketuk */
+    .sb { flex: 1; height: 40px; }
+    .score input[type='number'] { width: 76px; height: 40px; }
+    .row.warn { padding-left: 8px; padding-right: 8px; }
   }
 </style>

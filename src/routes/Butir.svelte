@@ -48,6 +48,15 @@
   let current = $derived(jenjang.butir.find((b) => b.no === selected) || null);
   let idx = $derived(current ? jenjang.butir.indexOf(current) : -1);
 
+  // Di HP daftar dan detail bergantian; saat kembali ke daftar, gulir ke butir yang terakhir dibuka
+  let terakhir = null;
+  $effect(() => {
+    if (selected) { terakhir = selected; return; }
+    if (!terakhir || !matchMedia('(max-width: 860px)').matches) return;
+    const no = terakhir;
+    requestAnimationFrame(() => document.querySelector(`.item[data-no="${no}"]`)?.scrollIntoView({ block: 'center' }));
+  });
+
   // ← → pindah butir
   function onkeydown(e) {
     if (!current || e.altKey || e.ctrlKey || e.metaKey) return;
@@ -94,7 +103,7 @@
         {#each k.sub as s}
           {#if s.judul}<div class="shead">{s.judul}</div>{/if}
           {#each s.list as b}
-            <a class="item" class:active={b.no === selected} class:inalur={!!s.judul} href={href(jenjang.id, 'butir', b.no)}>
+            <a class="item" class:active={b.no === selected} class:inalur={!!s.judul} data-no={b.no} href={href(jenjang.id, 'butir', b.no)}>
               <span class="kode">{b.kode}</span>
               {#if s.judul}
                 <span class="txt tahap" style="--c: var(--t{b.tahapNo})">{TAHAP[b.tahapNo - 1]}</span>
@@ -156,8 +165,9 @@
 
 <style>
   .layout { display: grid; grid-template-columns: 340px 1fr; gap: 36px; align-items: start; }
+  .layout > * { min-width: 0; }
   .list {
-    position: sticky; top: 108px; max-height: calc(100vh - 124px); overflow-y: auto;
+    position: sticky; top: calc(var(--head, 92px) + 16px); max-height: calc(100vh - var(--head, 92px) - 32px); overflow-y: auto;
     border-right: 1px solid var(--border); padding-right: 4px;
   }
   .filters { position: sticky; top: 0; background: var(--bg); padding: 0 8px 12px 0; border-bottom: 1px solid var(--border-strong); z-index: 1; }
@@ -205,9 +215,18 @@
   .legend dd { margin: 0; }
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
-    .list { position: static; max-height: none; border-right: 0; padding-right: 0; }
+    /* Daftar ikut menggulir halaman; kotak filter menempel tepat di bawah header */
+    .list { position: static; max-height: none; overflow: visible; border-right: 0; padding-right: 0; }
+    .filters { top: var(--head, 92px); padding: 10px 0 12px; margin-top: -10px; }
     .layout.has-detail .list { display: none; }
     .layout:not(.has-detail) .detail { display: none; }
-    .back { display: inline-block; }
+    .back {
+      display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px 6px 8px; font-weight: 500;
+      text-decoration: none; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface);
+    }
+    .item { padding-top: 10px; padding-bottom: 10px; grid-template-columns: 56px 1fr auto; }
+    .item.inalur { padding-top: 7px; padding-bottom: 7px; }
+    .seg button { padding: 5px 10px; }
+    .pager a { padding: 6px 0; }
   }
 </style>

@@ -128,7 +128,8 @@
 </div>
 
 <style>
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
+  /* min() mencegah kolom 340px melebihi lebar layar HP */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 16px; margin: 16px 0; }
   .mt { margin-top: 16px; }
   .mb { margin-bottom: 16px; }
   h2.mt { margin-top: 22px; }
@@ -144,5 +145,12 @@
   .cur { background: var(--surface); font-weight: 700; }
   h2 { font-size: 1.15rem; }
   .total td { font-weight: 700; }
-  @media (max-width: 520px) { .hb { grid-template-columns: 1fr 70px; } .track { grid-column: 1 / -1; grid-row: 2; } }
+  @media (max-width: 520px) {
+    .hb { grid-template-columns: 1fr auto; gap: 4px 10px; margin: 12px 0; }
+    .lbl { flex-direction: row; gap: 8px; align-items: baseline; }
+    .lbl .small { white-space: nowrap; }
+    .track { grid-column: 1 / -1; grid-row: 2; height: 8px; }
+    table { font-size: 0.86rem; }
+    th, td { padding: 7px 8px; }
+  }
 </style>

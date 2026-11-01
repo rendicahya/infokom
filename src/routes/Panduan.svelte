@@ -138,6 +138,9 @@
   .w { font-weight: 600; font-variant-numeric: tabular-nums; }
   @media (max-width: 600px) {
     details > :global(*:not(summary)) { margin-left: 0; }
+    summary { font-size: 1rem; padding-top: 13px; padding-bottom: 13px; line-height: 1.35; }
+    .tag { display: block; margin: 2px 0 0; }
+    .part { font-size: 1.15rem; }
     .anak { margin-left: 10px; }
     .link { grid-template-columns: auto 1fr auto; } .link .t { grid-column: 1 / -1; grid-row: 2; }
   }

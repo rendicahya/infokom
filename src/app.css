@@ -92,7 +92,12 @@ h4 { font-size: 1rem; }
 
 button, input, select { font: inherit; color: inherit; }
 
-.container { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+.container {
+  max-width: 1240px; margin: 0 auto;
+  --gutter: 20px;
+  /* safe-area: poni/notch iPhone dalam posisi lanskap (viewport-fit=cover) */
+  padding: 0 max(var(--gutter), env(safe-area-inset-right)) 0 max(var(--gutter), env(safe-area-inset-left));
+}
 
 .card {
   background: var(--surface);
@@ -145,6 +150,27 @@ input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible
 }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { -webkit-tap-highlight-color: transparent; }
+
+/* Tabel lebar digeser di dalam wadahnya, bukan menggeser seluruh halaman */
+.table-wrap { overscroll-behavior-x: contain; }
+
+@media (max-width: 640px) {
+  .container { --gutter: 16px; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.25rem; }
+  .card { padding: 16px; }
+  /* Di bawah 16px, Safari iOS memperbesar halaman saat kolom isian difokus */
+  input[type='search'], input[type='number'], input[type='text'], select { font-size: max(16px, 1rem); }
+}
+
+/* Target sentuh minimal ~40px di perangkat sentuh */
+@media (pointer: coarse) {
+  .btn { min-height: 40px; padding: 8px 14px; }
+  input[type='search'], input[type='text'], select { min-height: 40px; }
+}
 
 @media print {
   .no-print { display: none !important; }

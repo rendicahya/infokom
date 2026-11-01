@@ -173,5 +173,17 @@
     padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
   }
   select { padding: 3px 8px; margin-left: 6px; }
-  @media (max-width: 600px) { .rubrik { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) {
+    section { margin-top: 24px; }
+    .rubrik { grid-template-columns: 1fr; }
+    .head { gap: 12px; padding-bottom: 14px; }
+    .head h2 { font-size: 2rem; }
+    .weight { gap: 20px; width: 100%; }
+    .weight .big { font-size: 1.7rem; }
+    .alur { padding: 14px 14px 12px; margin-left: -4px; margin-right: -4px; }
+    .panduan { padding-left: 12px; }
+    .ntext { padding: 14px 16px; font-size: 0.95rem; line-height: 1.7; }
+    .lvl { padding: 12px 14px; }
+    .narasi .nh { gap: 8px; }
+  }
 </style>
