@@ -4,7 +4,8 @@
   import { sectionMarkdown } from '../lib/parse.js';
   import { href } from '../lib/router.svelte.js';
   import { fmt } from '../lib/data.js';
-  import { asing } from '../lib/asing.js';
+  import { asing, miringkanHtml } from '../lib/asing.js';
+  import { sorotButir } from '../lib/sorot.js';
 
   let { jenjang } = $props();
   let led = $derived(jenjang.led);
@@ -18,7 +19,8 @@
   <h1>Panduan penyusunan LED</h1>
   <p class="lead">
     Isi Instrumen LED, per bagian. Setiap kriteria dibuka dengan peta alur PPEPP, lalu panduan per tahap yang ditautkan ke
-    butir penilaian beserta bobotnya.
+    butir penilaian beserta bobotnya. Di bagian Kriteria, <mark class="sama">teks bersorot</mark> adalah bagian kalimat
+    yang sama pada butir berhuruf sama di semua tahap PPEPP.
   </p>
 
   <h2 class="part">Bagian Kesatu · Kerangka Konseptual</h2>
@@ -74,7 +76,7 @@
             <a class="link" href={href(jenjang.id, 'butir', b.no)}>
               <span class="jenis {b.jenis}">{b.jenis}</span>
               <b class="mono">{b.kode}</b>
-              <span class="t">{@html asing(t.items[b.huruf] || '')}</span>
+              <span class="t">{@html miringkanHtml(sorotButir(k, t.no - 1, b.huruf))}</span>
               <span class="w">{fmt(b.bobot)}</span>
             </a>
           {/each}
@@ -142,6 +144,10 @@
     margin: 6px 0; color: var(--text); font-size: 0.9rem; text-decoration: none;
   }
   .link:hover { border-color: var(--accent); }
+  .wrap :global(mark.sama) {
+    background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit;
+    border-radius: 3px; padding: 0 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  }
   .w { font-weight: 600; font-variant-numeric: tabular-nums; }
   @media (max-width: 600px) {
     details > :global(*:not(summary)) { margin-left: 0; }
