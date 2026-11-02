@@ -7,7 +7,7 @@
     {
       nama: 'Penetapan', emoji: '🎯',
       inti: 'Menetapkan standar: target yang terukur.',
-      rizal: 'Rizal ingin ikut maraton. Ia menetapkan target: berlari dengan <b>pace 6 menit/km</b>. Target ini jelas dan bisa diukur, bukan sekadar “ingin lari lebih cepat”.',
+      rizal: 'Rizal ingin ikut maraton. Ia menetapkan target: berlari dengan <b><i>pace</i> 6 menit/km</b>. Target ini jelas dan bisa diukur, bukan sekadar “ingin lari lebih cepat”.',
       prodi: 'Program studi menetapkan standar beserta indikator dan targetnya, misalnya “persentase lulusan tepat waktu minimal <b>60%</b>”. Standar disahkan dalam dokumen resmi.',
       led: 'Dokumen kebijakan dan standar, indikator yang terukur, target, dan dasar penetapannya.',
     },
@@ -21,7 +21,7 @@
     {
       nama: 'Evaluasi', emoji: '⏱️',
       inti: 'Membandingkan capaian dengan target.',
-      rizal: 'Rizal mengukur hasil latihannya: ternyata ia mencapai <b>pace 5 menit/km</b>. Hasil ini lebih cepat dari target 6 menit/km, jadi targetnya terlampaui.',
+      rizal: 'Rizal mengukur hasil latihannya: ternyata ia mencapai <b><i>pace</i> 5 menit/km</b>. Hasil ini lebih cepat dari target 6 menit/km, jadi targetnya terlampaui.',
       prodi: 'Program studi mengukur capaian dan membandingkannya dengan target, misalnya lulusan tepat waktu mencapai <b>72%</b>, di atas target 60%.',
       led: 'Data capaian beserta target pembandingnya, analisis tercapai atau tidak, dan penyebabnya.',
     },
@@ -35,7 +35,7 @@
     {
       nama: 'Peningkatan', emoji: '📈',
       inti: 'Menaikkan standar untuk siklus berikutnya.',
-      rizal: 'Karena target lama terlampaui, Rizal <b>meningkatkan targetnya menjadi pace 5,5 menit/km</b>. Target baru ini lebih tinggi dari target lama dan menjadi titik awal siklus berikutnya.',
+      rizal: 'Karena target lama terlampaui, Rizal <b>meningkatkan targetnya menjadi <i>pace</i> 5,5 menit/km</b>. Target baru ini lebih tinggi dari target lama dan menjadi titik awal siklus berikutnya.',
       prodi: 'Program studi menaikkan standar, misalnya target lulusan tepat waktu dinaikkan dari 60% menjadi 70%. Standar baru ini ditetapkan dan siklus dimulai lagi.',
       led: 'Standar yang dinaikkan (lebih tinggi atau lebih luas), alasannya, dan dokumen penetapan standar barunya.',
     },
@@ -66,7 +66,7 @@
 
 <h2>Analogi: Rizal si pelari</h2>
 <p class="muted">
-  Bayangkan seorang pelari bernama Rizal yang sedang bersiap untuk maraton. Pace adalah waktu tempuh per kilometer, jadi
+  Bayangkan seorang pelari bernama Rizal yang sedang bersiap untuk maraton. <i>Pace</i> adalah waktu tempuh per kilometer, jadi
   angka yang lebih kecil berarti lebih cepat.
 </p>
 
@@ -101,11 +101,11 @@
     <table>
       <thead><tr><th>Tahap</th><th>Rizal</th><th>Pertanyaan kunci</th></tr></thead>
       <tbody>
-        <tr><td><span class="dot" style="--c: var(--t1)"></span>Penetapan <span aria-hidden="true">🎯</span></td><td>Target pace 6 menit/km</td><td>Apa standarnya, dan berapa targetnya?</td></tr>
+        <tr><td><span class="dot" style="--c: var(--t1)"></span>Penetapan <span aria-hidden="true">🎯</span></td><td>Target <i>pace</i> 6 menit/km</td><td>Apa standarnya, dan berapa targetnya?</td></tr>
         <tr><td><span class="dot" style="--c: var(--t2)"></span>Pelaksanaan <span aria-hidden="true">🏃</span></td><td>Berlatih rutin</td><td>Apa yang dikerjakan untuk mencapainya?</td></tr>
-        <tr><td><span class="dot" style="--c: var(--t3)"></span>Evaluasi <span aria-hidden="true">⏱️</span></td><td>Tercapai pace 5 menit/km</td><td>Berapa capaiannya dibandingkan target?</td></tr>
+        <tr><td><span class="dot" style="--c: var(--t3)"></span>Evaluasi <span aria-hidden="true">⏱️</span></td><td>Tercapai <i>pace</i> 5 menit/km</td><td>Berapa capaiannya dibandingkan target?</td></tr>
         <tr><td><span class="dot" style="--c: var(--t4)"></span>Pengendalian <span aria-hidden="true">👟</span></td><td>Sering cedera, membeli sepatu baru</td><td>Apa tindak lanjut atas hasil evaluasi?</td></tr>
-        <tr><td><span class="dot" style="--c: var(--t5)"></span>Peningkatan <span aria-hidden="true">📈</span></td><td>Target baru pace 5,5 menit/km</td><td>Standar apa yang dinaikkan untuk siklus berikutnya?</td></tr>
+        <tr><td><span class="dot" style="--c: var(--t5)"></span>Peningkatan <span aria-hidden="true">📈</span></td><td>Target baru <i>pace</i> 5,5 menit/km</td><td>Standar apa yang dinaikkan untuk siklus berikutnya?</td></tr>
       </tbody>
     </table>
   </div>
