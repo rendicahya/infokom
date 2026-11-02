@@ -2,40 +2,40 @@
   import { href } from '../lib/router.svelte.js';
   import { JENJANG } from '../lib/data.js';
 
-  // Satu tahap = analogi pelari (Rizal) + padanannya di program studi + yang perlu ditunjukkan di LED
+  // Satu tahap = analogi pelari + padanannya di program studi + yang perlu ditunjukkan di LED
   const TAHAP = [
     {
       nama: 'Penetapan', emoji: '🎯',
       inti: 'Menetapkan standar: target yang terukur.',
-      rizal: 'Rizal ingin ikut maraton. Ia menetapkan target: <b>menyelesaikan maraton dalam 4 jam</b>. Target ini jelas dan bisa diukur, bukan sekadar “ingin lari lebih cepat”.',
+      pelari: 'Seorang pelari ingin ikut maraton. Ia menetapkan target: <b>menyelesaikan maraton dalam 4 jam</b>. Target ini jelas dan bisa diukur, bukan sekadar “ingin lari lebih cepat”.',
       prodi: 'Program studi menetapkan standar beserta indikator dan targetnya, misalnya “persentase lulusan tepat waktu minimal <b>60%</b>”. Standar disahkan dalam dokumen resmi.',
       led: 'Dokumen kebijakan dan standar, indikator yang terukur, target, dan dasar penetapannya.',
     },
     {
       nama: 'Pelaksanaan', emoji: '🏃',
       inti: 'Menjalankan kegiatan untuk mencapai standar.',
-      rizal: 'Rizal berlatih sesuai rencana: lari rutin beberapa kali seminggu, latihan interval, dan lari jarak jauh di akhir pekan.',
+      pelari: 'Pelari itu berlatih sesuai rencana: lari rutin beberapa kali seminggu, latihan interval, dan lari jarak jauh di akhir pekan.',
       prodi: 'Program studi menjalankan kegiatan untuk mencapai standar: pembimbingan akademik, pemantauan studi, dan pendampingan tugas akhir.',
       led: 'Kegiatan nyata yang dijalankan, siapa pelaksananya, kapan, dan bukti pelaksanaannya.',
     },
     {
       nama: 'Evaluasi', emoji: '⏱️',
       inti: 'Membandingkan capaian dengan target.',
-      rizal: 'Rizal mengukur hasil latihannya: dalam uji coba lari sejauh jarak maraton, ia mencapai finis dalam <b>3,5 jam</b>. Hasil ini lebih cepat dari target 4 jam, jadi targetnya terlampaui.',
+      pelari: 'Pelari itu mengukur hasil latihannya: dalam uji coba lari sejauh jarak maraton, ia mencapai finis dalam <b>3,5 jam</b>. Hasil ini lebih cepat dari target 4 jam, jadi targetnya terlampaui.',
       prodi: 'Program studi mengukur capaian dan membandingkannya dengan target, misalnya lulusan tepat waktu mencapai <b>72%</b>, di atas target 60%.',
       led: 'Data capaian beserta target pembandingnya, analisis tercapai atau tidak, dan penyebabnya.',
     },
     {
       nama: 'Pengendalian', emoji: '👟',
       inti: 'Menindaklanjuti hasil evaluasi.',
-      rizal: 'Rizal memang melampaui target, tetapi selama latihan <b>kakinya sering cedera</b>. Agar cedera tidak terulang dan capaiannya tetap terjaga menjelang lomba, ia <b>membeli sepatu lari baru</b> yang lebih sesuai untuk kakinya.',
+      pelari: 'Pelari itu memang melampaui target, tetapi selama latihan <b>kakinya sering cedera</b>. Agar cedera tidak terulang dan capaiannya tetap terjaga menjelang lomba, ia <b>membeli sepatu lari baru</b> yang lebih sesuai untuk kakinya.',
       prodi: 'Program studi menindaklanjuti hasil evaluasi: tindakan koreksi bila target tidak tercapai, atau tindakan untuk menjaga capaian bila target tercapai.',
       led: 'Tindak lanjut yang jelas terkait dengan temuan evaluasi, beserta bukti pelaksanaannya.',
     },
     {
       nama: 'Peningkatan', emoji: '📈',
       inti: 'Menaikkan standar untuk siklus berikutnya.',
-      rizal: 'Karena target lama terlampaui, Rizal <b>meningkatkan targetnya menjadi 3 jam 15 menit</b>. Target baru ini lebih tinggi dari target lama dan menjadi titik awal siklus berikutnya.',
+      pelari: 'Karena target lama terlampaui, pelari itu <b>meningkatkan targetnya menjadi 3 jam 15 menit</b>. Target baru ini lebih tinggi dari target lama dan menjadi titik awal siklus berikutnya.',
       prodi: 'Program studi menaikkan standar, misalnya target lulusan tepat waktu dinaikkan dari 60% menjadi 70%. Standar baru ini ditetapkan dan siklus dimulai lagi.',
       led: 'Standar yang dinaikkan (lebih tinggi atau lebih luas), alasannya, dan dokumen penetapan standar barunya.',
     },
@@ -64,9 +64,9 @@
   <li class="ulang">kembali ke Penetapan dengan standar yang lebih tinggi</li>
 </ol>
 
-<h2>Analogi: Rizal si pelari</h2>
+<h2>Analogi: seorang pelari</h2>
 <p class="muted">
-  Bayangkan seorang pelari bernama Rizal yang sedang bersiap untuk maraton. Waktu tempuh yang lebih singkat
+  Bayangkan seorang pelari yang sedang bersiap untuk maraton. Waktu tempuh yang lebih singkat
   berarti lebih cepat.
 </p>
 
@@ -81,9 +81,9 @@
         </div>
       </header>
       <div class="isi">
-        <div class="kol rizal">
-          <div class="sub">Rizal</div>
-          <p>{@html t.rizal}</p>
+        <div class="kol pelari">
+          <div class="sub">Pelari</div>
+          <p>{@html t.pelari}</p>
         </div>
         <div class="kol">
           <div class="sub">Di program studi <span class="muted">(ilustrasi)</span></div>
@@ -99,7 +99,7 @@
   <h2>Ringkasan</h2>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Tahap</th><th>Rizal</th><th>Pertanyaan kunci</th></tr></thead>
+      <thead><tr><th>Tahap</th><th>Pelari</th><th>Pertanyaan kunci</th></tr></thead>
       <tbody>
         <tr><td><span class="dot" style="--c: var(--t1)"></span>Penetapan <span aria-hidden="true">🎯</span></td><td>Target maraton 4 jam</td><td>Apa standarnya, dan berapa targetnya?</td></tr>
         <tr><td><span class="dot" style="--c: var(--t2)"></span>Pelaksanaan <span aria-hidden="true">🏃</span></td><td>Berlatih rutin</td><td>Apa yang dikerjakan untuk mencapainya?</td></tr>
@@ -122,7 +122,7 @@
   <h2>PPEPP di instrumen ini</h2>
   <p>
     Pada kriteria 1–6, butir dikelompokkan per tahap PPEPP. Butir berhuruf sama di kelima tahap (misalnya A di Penetapan
-    sampai A di Peningkatan) membentuk satu <b>alur</b> tentang topik yang sama, seperti perjalanan Rizal dari target
+    sampai A di Peningkatan) membentuk satu <b>alur</b> tentang topik yang sama, seperti perjalanan si pelari dari target
     sampai target baru. Narasi untuk satu alur sebaiknya saling merujuk: target di Penetapan dievaluasi di Evaluasi,
     temuannya ditindaklanjuti di Pengendalian, dan menjadi dasar standar baru di Peningkatan.
   </p>
@@ -161,7 +161,7 @@
   .isi { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
   .kol p { margin: 0; }
   .sub { font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
-  .rizal p { font-family: var(--read); font-size: 1rem; }
+  .pelari p { font-family: var(--read); font-size: 1rem; }
   .led { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 0.88rem; }
 
   .ringkas { margin-top: 28px; }
