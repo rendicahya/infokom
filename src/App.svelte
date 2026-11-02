@@ -6,18 +6,20 @@
   import Butir from './routes/Butir.svelte';
   import Kalkulator from './routes/Kalkulator.svelte';
   import Rekap from './routes/Rekap.svelte';
+  import Ppepp from './routes/Ppepp.svelte';
   import BagiDialog from './lib/BagiDialog.svelte';
   import KunciDialog from './lib/KunciDialog.svelte';
   import { rahasia } from './lib/rahasia.svelte.js';
 
   let bagi, kunciDlg;
 
-  // Label pendek dipakai di layar sempit agar keempat tab muat tanpa digeser
+  // Label pendek dipakai di layar sempit agar kelima tab muat tanpa digeser
   const PAGES = [
     { id: 'butir', label: 'Butir & Rubrik', pendek: 'Butir' },
     { id: 'panduan', label: 'Panduan LED', pendek: 'Panduan' },
     { id: 'kalkulator', label: 'Kalkulator', pendek: 'Kalkulator' },
     { id: 'rekap', label: 'Rekap Bobot', pendek: 'Rekap' },
+    { id: 'ppepp', label: 'Memahami PPEPP', pendek: 'PPEPP' },
   ];
 
   let jenjang = $derived(getJenjang(route.jenjang));
@@ -143,6 +145,8 @@
     {#key jenjang.id}<Kalkulator {jenjang} />{/key}
   {:else if page === 'rekap'}
     <Rekap {jenjang} />
+  {:else if page === 'ppepp'}
+    <Ppepp {jenjang} />
   {:else}
     <Butir {jenjang} selected={route.param ? +route.param : null} />
   {/if}
@@ -205,7 +209,7 @@
     .tools button { width: 38px; height: 38px; }
     .tools svg { width: 19px; height: 19px; }
     .tabs { gap: 0; justify-content: space-between; }
-    .tabs a { flex: 1; text-align: center; padding: 9px 4px 10px; }
+    .tabs a { flex: 1; text-align: center; padding: 9px 2px 10px; font-size: 0.84rem; }
     .tabs .full { display: none; }
     .tabs .short { display: inline; }
     main { padding-top: 22px; padding-bottom: 40px; }
