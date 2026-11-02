@@ -78,6 +78,7 @@
     Konsekuensinya, narasi tiap butir harus merujuk butir sebelumnya. Indikator yang dievaluasi harus sama dengan yang
     ditetapkan, dan tindak lanjut harus menjawab temuan evaluasi.
   </p>
+  <p>Belum terbiasa dengan PPEPP? <a href={href('ppepp')}>Baca panduan Memahami PPEPP</a> dengan analogi seorang pelari.</p>
   <div class="label">Contoh: Kriteria 2 Relevansi Pendidikan ({contoh.nama})</div>
   <AlurMatrix jenjang={contoh} alur={k2.alur} />
   <p class="muted small">Baca setiap baris dari kiri ke kanan. Klik butir untuk membuka rubrik dan contoh narasinya.</p>

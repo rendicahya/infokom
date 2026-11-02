@@ -19,9 +19,10 @@
     { id: 'panduan', label: 'Panduan LED', pendek: 'Panduan' },
     { id: 'kalkulator', label: 'Kalkulator', pendek: 'Kalkulator' },
     { id: 'rekap', label: 'Rekap Bobot', pendek: 'Rekap' },
-    { id: 'ppepp', label: 'Memahami PPEPP', pendek: 'PPEPP' },
   ];
 
+  // Panduan PPEPP berlaku untuk semua jenjang, jadi alamatnya #/ppepp tanpa jenjang
+  let umum = $derived(route.jenjang === 'ppepp');
   let jenjang = $derived(getJenjang(route.jenjang));
   let page = $derived(jenjang ? route.page || 'butir' : null);
 
@@ -124,11 +125,14 @@
       {/if}
     </div>
   </div>
-  {#if jenjang}
+  {#if jenjang || umum}
     <nav class="container tabs" aria-label="Halaman">
-      {#each PAGES as p}
-        <a href={href(jenjang.id, p.id)} class:active={page === p.id}><span class="full">{p.label}</span><span class="short">{p.pendek}</span></a>
-      {/each}
+      {#if jenjang}
+        {#each PAGES as p}
+          <a href={href(jenjang.id, p.id)} class:active={page === p.id}><span class="full">{p.label}</span><span class="short">{p.pendek}</span></a>
+        {/each}
+      {/if}
+      <a class="umum" href={href('ppepp')} class:active={umum} title="Panduan umum, berlaku untuk semua jenjang"><span class="full">Memahami PPEPP</span><span class="short">PPEPP</span></a>
     </nav>
   {/if}
 </header>
@@ -137,7 +141,9 @@
 <KunciDialog bind:this={kunciDlg} />
 
 <main class="container">
-  {#if !jenjang}
+  {#if umum}
+    <Ppepp />
+  {:else if !jenjang}
     <Home />
   {:else if page === 'panduan'}
     <Panduan {jenjang} />
@@ -145,8 +151,6 @@
     {#key jenjang.id}<Kalkulator {jenjang} />{/key}
   {:else if page === 'rekap'}
     <Rekap {jenjang} />
-  {:else if page === 'ppepp'}
-    <Ppepp {jenjang} />
   {:else}
     <Butir {jenjang} selected={route.param ? +route.param : null} />
   {/if}
@@ -195,6 +199,8 @@
   }
   .tabs a:hover { color: var(--text); }
   .tabs a.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  /* Panduan umum dipisah ke kanan: bukan halaman milik jenjang yang sedang dipilih */
+  .tabs .umum { margin-left: auto; }
   main { padding-top: 32px; padding-bottom: 56px; min-height: 70vh; }
   footer { padding-bottom: 32px; }
   footer p { border-top: 1px solid var(--border); padding-top: 14px; margin: 0; color: var(--muted); font-size: 0.8rem; max-width: 70ch; }

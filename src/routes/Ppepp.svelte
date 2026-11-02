@@ -1,7 +1,6 @@
 <script>
   import { href } from '../lib/router.svelte.js';
-
-  let { jenjang } = $props();
+  import { JENJANG } from '../lib/data.js';
 
   // Satu tahap = analogi pelari (Rizal) + padanannya di program studi + yang perlu ditunjukkan di LED
   const TAHAP = [
@@ -50,7 +49,7 @@
   ];
 </script>
 
-<div class="label">Program {jenjang.nama}</div>
+<div class="label">Panduan umum · berlaku untuk semua jenjang</div>
 <h1>Memahami siklus PPEPP</h1>
 <p class="lead">
   PPEPP adalah siklus sistem penjaminan mutu internal: <b>Penetapan, Pelaksanaan, Evaluasi, Pengendalian,</b> dan
@@ -127,10 +126,15 @@
     sampai target baru. Narasi untuk satu alur sebaiknya saling merujuk: target di Penetapan dievaluasi di Evaluasi,
     temuannya ditindaklanjuti di Pengendalian, dan menjadi dasar standar baru di Peningkatan.
   </p>
-  <p class="aksi">
-    <a class="btn primary" href={href(jenjang.id, 'butir')}>Lihat butir per alur PPEPP</a>
-    <a class="btn" href={href(jenjang.id, 'panduan')}>Buka Panduan LED</a>
-  </p>
+  <div class="jj">
+    {#each JENJANG as j}
+      <div class="baris">
+        <b>{j.nama}</b>
+        <a class="btn" href={href(j.id, 'butir')}>Butir per alur</a>
+        <a class="btn" href={href(j.id, 'panduan')}>Panduan LED</a>
+      </div>
+    {/each}
+  </div>
 </div>
 
 <style>
@@ -169,7 +173,9 @@
 
   .lanjut { margin-top: 36px; }
   .lanjut p { max-width: 80ch; }
-  .aksi { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 0; }
+  .jj { display: grid; gap: 8px; }
+  .baris { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .baris b { min-width: 90px; }
 
   @media (max-width: 640px) {
     .isi { grid-template-columns: 1fr; }
