@@ -5,35 +5,35 @@
   // Satu tahap = analogi pelari (Rizal) + padanannya di program studi + yang perlu ditunjukkan di LED
   const TAHAP = [
     {
-      nama: 'Penetapan',
+      nama: 'Penetapan', emoji: '🎯',
       inti: 'Menetapkan standar: target yang terukur.',
       rizal: 'Rizal ingin ikut maraton. Ia menetapkan target: berlari dengan <b>pace 6 menit/km</b>. Target ini jelas dan bisa diukur, bukan sekadar “ingin lari lebih cepat”.',
       prodi: 'Program studi menetapkan standar beserta indikator dan targetnya, misalnya “persentase lulusan tepat waktu minimal <b>60%</b>”. Standar disahkan dalam dokumen resmi.',
       led: 'Dokumen kebijakan dan standar, indikator yang terukur, target, dan dasar penetapannya.',
     },
     {
-      nama: 'Pelaksanaan',
+      nama: 'Pelaksanaan', emoji: '🏃',
       inti: 'Menjalankan kegiatan untuk mencapai standar.',
       rizal: 'Rizal berlatih sesuai rencana: lari rutin beberapa kali seminggu, latihan interval, dan lari jarak jauh di akhir pekan.',
       prodi: 'Program studi menjalankan kegiatan untuk mencapai standar: pembimbingan akademik, pemantauan studi, dan pendampingan tugas akhir.',
       led: 'Kegiatan nyata yang dijalankan, siapa pelaksananya, kapan, dan bukti pelaksanaannya.',
     },
     {
-      nama: 'Evaluasi',
+      nama: 'Evaluasi', emoji: '⏱️',
       inti: 'Membandingkan capaian dengan target.',
       rizal: 'Rizal mengukur hasil latihannya: ternyata ia mencapai <b>pace 5 menit/km</b>. Hasil ini lebih cepat dari target 6 menit/km, jadi targetnya terlampaui.',
       prodi: 'Program studi mengukur capaian dan membandingkannya dengan target, misalnya lulusan tepat waktu mencapai <b>72%</b>, di atas target 60%.',
       led: 'Data capaian beserta target pembandingnya, analisis tercapai atau tidak, dan penyebabnya.',
     },
     {
-      nama: 'Pengendalian',
+      nama: 'Pengendalian', emoji: '👟',
       inti: 'Menindaklanjuti hasil evaluasi.',
-      rizal: 'Berdasarkan hasil evaluasi, Rizal mengambil tindakan: ia <b>membeli sepatu lari baru</b> agar capaiannya terjaga dan risiko cedera berkurang menjelang lomba.',
+      rizal: 'Rizal memang melampaui target, tetapi selama latihan <b>kakinya sering cedera</b>. Agar cedera tidak terulang dan capaiannya tetap terjaga menjelang lomba, ia <b>membeli sepatu lari baru</b> yang lebih sesuai untuk kakinya.',
       prodi: 'Program studi menindaklanjuti hasil evaluasi: tindakan koreksi bila target tidak tercapai, atau tindakan untuk menjaga capaian bila target tercapai.',
       led: 'Tindak lanjut yang jelas terkait dengan temuan evaluasi, beserta bukti pelaksanaannya.',
     },
     {
-      nama: 'Peningkatan',
+      nama: 'Peningkatan', emoji: '📈',
       inti: 'Menaikkan standar untuk siklus berikutnya.',
       rizal: 'Karena target lama terlampaui, Rizal <b>meningkatkan targetnya menjadi pace 5,5 menit/km</b>. Target baru ini lebih tinggi dari target lama dan menjadi titik awal siklus berikutnya.',
       prodi: 'Program studi menaikkan standar, misalnya target lulusan tepat waktu dinaikkan dari 60% menjadi 70%. Standar baru ini ditetapkan dan siklus dimulai lagi.',
@@ -59,7 +59,7 @@
 
 <ol class="siklus" aria-label="Urutan tahap PPEPP">
   {#each TAHAP as t, i}
-    <li style="--c: var(--t{i + 1})"><span class="n">{i + 1}</span>{t.nama}</li>
+    <li style="--c: var(--t{i + 1})"><span class="n">{i + 1}</span>{t.nama} <span aria-hidden="true">{t.emoji}</span></li>
   {/each}
   <li class="ulang">kembali ke Penetapan dengan standar yang lebih tinggi</li>
 </ol>
@@ -76,7 +76,7 @@
       <header>
         <span class="n">{i + 1}</span>
         <div>
-          <h3>{t.nama}</h3>
+          <h3>{t.nama} <span class="emo" aria-hidden="true">{t.emoji}</span></h3>
           <div class="inti">{t.inti}</div>
         </div>
       </header>
@@ -101,11 +101,11 @@
     <table>
       <thead><tr><th>Tahap</th><th>Rizal</th><th>Pertanyaan kunci</th></tr></thead>
       <tbody>
-        <tr><td><span class="dot" style="--c: var(--t1)"></span>Penetapan</td><td>Target pace 6 menit/km</td><td>Apa standarnya, dan berapa targetnya?</td></tr>
-        <tr><td><span class="dot" style="--c: var(--t2)"></span>Pelaksanaan</td><td>Berlatih rutin</td><td>Apa yang dikerjakan untuk mencapainya?</td></tr>
-        <tr><td><span class="dot" style="--c: var(--t3)"></span>Evaluasi</td><td>Tercapai pace 5 menit/km</td><td>Berapa capaiannya dibandingkan target?</td></tr>
-        <tr><td><span class="dot" style="--c: var(--t4)"></span>Pengendalian</td><td>Membeli sepatu baru</td><td>Apa tindak lanjut atas hasil evaluasi?</td></tr>
-        <tr><td><span class="dot" style="--c: var(--t5)"></span>Peningkatan</td><td>Target baru pace 5,5 menit/km</td><td>Standar apa yang dinaikkan untuk siklus berikutnya?</td></tr>
+        <tr><td><span class="dot" style="--c: var(--t1)"></span>Penetapan <span aria-hidden="true">🎯</span></td><td>Target pace 6 menit/km</td><td>Apa standarnya, dan berapa targetnya?</td></tr>
+        <tr><td><span class="dot" style="--c: var(--t2)"></span>Pelaksanaan <span aria-hidden="true">🏃</span></td><td>Berlatih rutin</td><td>Apa yang dikerjakan untuk mencapainya?</td></tr>
+        <tr><td><span class="dot" style="--c: var(--t3)"></span>Evaluasi <span aria-hidden="true">⏱️</span></td><td>Tercapai pace 5 menit/km</td><td>Berapa capaiannya dibandingkan target?</td></tr>
+        <tr><td><span class="dot" style="--c: var(--t4)"></span>Pengendalian <span aria-hidden="true">👟</span></td><td>Sering cedera, membeli sepatu baru</td><td>Apa tindak lanjut atas hasil evaluasi?</td></tr>
+        <tr><td><span class="dot" style="--c: var(--t5)"></span>Peningkatan <span aria-hidden="true">📈</span></td><td>Target baru pace 5,5 menit/km</td><td>Standar apa yang dinaikkan untuk siklus berikutnya?</td></tr>
       </tbody>
     </table>
   </div>
@@ -156,6 +156,7 @@
   .tahap header { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
   .tahap header .n { width: 28px; height: 28px; font-size: 0.9rem; margin-top: 1px; }
   .tahap h3 { margin: 0; color: var(--c); }
+  .emo { font-size: 0.95em; }
   .inti { color: var(--muted); font-size: 0.9rem; }
   .isi { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
   .kol p { margin: 0; }
