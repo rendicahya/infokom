@@ -5,7 +5,6 @@
   import { JENIS, TAHAP } from '../lib/parse.js';
   import { getNarasi } from '../lib/narasi.js';
   import { kesinambungan } from '../lib/alur.js';
-  import { sorot, saudara } from '../lib/sorot.js';
   import { rahasia, narasiInternal } from '../lib/rahasia.svelte.js';
 
   let { jenjang, butir } = $props();
@@ -16,8 +15,6 @@
   let internal = $derived(terbuka ? narasiInternal(jenjang, butir) : null);
   let narasi = $derived(terbuka ? internal ?? getNarasi(jenjang, butir) : null);
   let kriteriaNama = $derived(jenjang.kriteria.find((k) => k.id === butir.kriteria)?.nama);
-  // Butir berhuruf sama di tahap PPEPP lain, untuk menyorot bagian kalimat yang sama
-  let sdr = $derived(saudara(jenjang.butir, butir));
   let bidang = $state(0);
   let copied = $state(false);
 
@@ -62,7 +59,7 @@
 
   <section>
     <h3>Elemen penilaian</h3>
-    <Md text={sorot(butir.elemen, sdr.map((x) => x.elemen), butir.huruf, true)} />
+    <Md text={butir.elemen} />
   </section>
 
   {#if butir.panduan}
@@ -84,7 +81,7 @@
         {/if}
       {:else}
         {#if butir.panduan.item}
-          <div class="focus"><Md text={`**${butir.huruf}.** ${sorot(butir.panduan.item, sdr.map((x) => x.panduan?.item), butir.huruf, true)}`} /></div>
+          <div class="focus"><Md text={`**${butir.huruf}.** ${butir.panduan.item}`} /></div>
         {/if}
         <Md text={butir.panduan.intro} />
       {/if}
@@ -94,7 +91,7 @@
   {#if butir.deskriptor}
     <section>
       <h3>Deskriptor</h3>
-      <Md text={sorot(butir.deskriptor, sdr.map((x) => x.deskriptor), butir.huruf, true)} />
+      <Md text={butir.deskriptor} />
     </section>
   {/if}
 

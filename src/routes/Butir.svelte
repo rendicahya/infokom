@@ -3,8 +3,7 @@
   import { fmt } from '../lib/data.js';
   import { TAHAP } from '../lib/parse.js';
   import ButirDetail from './ButirDetail.svelte';
-  import { sorot, saudara } from '../lib/sorot.js';
-  import { miringkanHtml } from '../lib/asing.js';
+  import { asing } from '../lib/asing.js';
 
   let { jenjang, selected } = $props();
 
@@ -110,7 +109,7 @@
               {#if s.judul}
                 <span class="txt tahap" style="--c: var(--t{b.tahapNo})">{TAHAP[b.tahapNo - 1]}</span>
               {:else}
-                <span class="txt">{@html miringkanHtml(sorot(ringkas(b), saudara(jenjang.butir, b).map(ringkas), b.huruf))}</span>
+                <span class="txt">{@html asing(ringkas(b))}</span>
               {/if}
               <span class="meta"><span class="jenis {b.jenis}">{b.jenis}</span><span>{fmt(b.bobot)}</span></span>
             </a>
@@ -141,11 +140,6 @@
         <p>
           {jenjang.butir.length} butir dengan total bobot <b>{fmt(jenjang.totalBobot)}</b>. Pilih butir untuk melihat panduan
           penulisan, rubrik skor, syarat Unggul, posisinya dalam alur PPEPP, dan contoh narasi.
-        </p>
-        <p>
-          Teks bersorot adalah bagian kalimat yang sama pada butir berhuruf sama di semua tahap PPEPP, dengan warna berbeda
-          per huruf: <mark class="sama w0">A</mark> <mark class="sama w1">B</mark> <mark class="sama w2">C</mark>
-          <mark class="sama w3">D</mark>.
         </p>
         <h3>Jenis butir</h3>
         <dl class="legend">
