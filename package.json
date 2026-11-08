@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "kunci": "node scripts/kunci.mjs"
+    "kunci": "node scripts/kunci.mjs",
+    "buka": "node scripts/buka.mjs"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "exceljs": "^4.4.0",
+    "firebase": "^13.2.0",
     "marked": "^18.1.2",
     "qrcode": "^1.5.4"
   }

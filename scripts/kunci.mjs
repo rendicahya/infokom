@@ -23,7 +23,13 @@ function tanya(teks) {
     const rl = createInterface({ input: process.stdin, output: process.stdout, terminal: true });
     // Ketikan password tidak ditampilkan
     rl._writeToOutput = (s) => { if (s.startsWith(teks)) process.stdout.write(s); };
-    rl.question(teks, (j) => { rl.close(); process.stdout.write('\n'); selesai(j); });
+    let dijawab = false;
+    rl.question(teks, (j) => { dijawab = true; rl.close(); process.stdout.write('\n'); selesai(j); });
+    rl.on('close', () => {
+      if (dijawab) return;
+      console.error('\nTerminal ini tidak bisa menerima input password. Jalankan di jendela terminal biasa (PowerShell / Windows Terminal).');
+      process.exit(1);
+    });
   });
 }
 

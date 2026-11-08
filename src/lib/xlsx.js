@@ -13,7 +13,7 @@ const labelKriteria = (k) =>
   k.id === 'profil' ? `A–B. ${k.nama}` : k.id === 'suplemen' ? `D. ${k.nama}` : `C.${k.id.slice(1)} ${k.nama}`;
 const ringkas = (b) => b.elemen.replace(/^\d\.\d\.?\s*\[[A-Z]+\]\s*/, '').replace(/^\d\.\d\s*/, '');
 
-export async function eksporXlsx(jenjang, skor, { nama = '', normalisasi = false } = {}) {
+export async function eksporXlsx(jenjang, skor, { nama = '', normalisasi = false, catatan = {} } = {}) {
   const { default: ExcelJS } = await import('exceljs');
   const wb = new ExcelJS.Workbook();
   wb.creator = 'Panduan LED LAM INFOKOM';
@@ -37,13 +37,14 @@ export async function eksporXlsx(jenjang, skor, { nama = '', normalisasi = false
     { header: 'Bobot', width: 9 },
     { header: 'Skor (0–4)', width: 11 },
     { header: 'Nilai', width: 9 },
+    { header: 'Catatan', width: 60 },
   ];
   const label = new Map(jenjang.kriteria.map((k) => [k.id, labelKriteria(k)]));
   jenjang.butir.forEach((b, i) => {
     const r = i + 2;
     sk.addRow([
       b.no, b.kode, label.get(b.kriteria), b.tahapNo ? TAHAP[b.tahapNo - 1] : '', b.jenis, ringkas(b), b.bobot,
-      skor[b.no] ?? null, { formula: `G${r}*H${r}/4` },
+      skor[b.no] ?? null, { formula: `G${r}*H${r}/4` }, catatan[b.no]?.trim() || null,
     ]);
   });
   sk.eachRow((row, r) => {
@@ -54,6 +55,7 @@ export async function eksporXlsx(jenjang, skor, { nama = '', normalisasi = false
       return;
     }
     row.getCell(6).alignment = { vertical: 'top', wrapText: true };
+    row.getCell(10).alignment = { vertical: 'top', wrapText: true };
     row.getCell(8).font = BIRU;
     for (const c of [7, 8, 9]) row.getCell(c).numFmt = '0.00';
   });
@@ -62,7 +64,7 @@ export async function eksporXlsx(jenjang, skor, { nama = '', normalisasi = false
     type: 'decimal', operator: 'between', allowBlank: true, formulae: [0, 4],
     showErrorMessage: true, errorTitle: 'Skor tidak valid', error: 'Skor harus antara 0 dan 4.',
   });
-  sk.autoFilter = `A1:I${akhir}`;
+  sk.autoFilter = `A1:J${akhir}`;
 
   // Lembar Ringkasan
   ws.columns = [{ width: 44 }, { width: 14 }, { width: 10 }, { width: 12 }, { width: 12 }, { width: 13 }, { width: 14 }, { width: 13 }];
