@@ -7,7 +7,7 @@
   import { eksporXlsx } from '../lib/xlsx.js';
   import Md from '../lib/Md.svelte';
   import { rahasia } from '../lib/rahasia.svelte.js';
-  import { unggah, daftar as daftarAwan, hapus as hapusAwan, konfigurasi } from '../lib/awan.js';
+  import * as srv from '../lib/server.js';
 
   let { jenjang } = $props();
 
@@ -70,28 +70,40 @@
     for (const [k, v] of Object.entries(s.catatan || {})) if (typeof v === 'string' && v) catatan[k] = v;
     nama = s.nama || '';
     if (typeof s.normalisasi === 'boolean') normalisasi = s.normalisasi;
+    idServer = null;
     info = '';
   }
 
-  // Paket lengkap untuk file .lam dan Firebase: skor, catatan, dan informasi butir & hasil
-  function paket(n) {
+  // Paket lengkap untuk file .lam dan server: skor, catatan, dan informasi butir & hasil
+  function paket(n, s = skor, c = catatan, norm = normalisasi) {
+    const h = hitung(jenjang, s, { normalisasi: norm });
     return {
       format: 'infokom-lam',
       versi: 1,
       jenjang: jenjang.id,
-      nama: n,
+      nama: n.slice(0, 200),
       waktu: Date.now(),
-      normalisasi,
-      nilaiAkhir: hasil.nilaiAkhir,
-      status: hasil.status.label,
-      terisi: hasil.terisi,
-      skor: { ...skor },
-      catatan: salinCatatan(catatan),
+      normalisasi: norm,
+      nilaiAkhir: h.nilaiAkhir,
+      status: h.status.label,
+      terisi: h.terisi,
+      skor: { ...s },
+      catatan: salinCatatan(c),
       butir: jenjang.butir.map((b) => ({
         no: b.no, kode: b.kode, kriteria: b.kriteria, jenis: b.jenis, bobot: b.bobot,
-        skor: skor[b.no] ?? null, catatan: catatan[b.no]?.trim() || '',
+        skor: s[b.no] ?? null, catatan: c[b.no]?.trim() || '',
       })),
     };
+  }
+  // Paket dari isi file .lam (atau JSON lama): skor dan catatan disaring agar hanya butir jenjang ini
+  function paketDariFile(data, n) {
+    const s = {}, c = {};
+    for (const b of jenjang.butir) {
+      const v = data.skor?.[b.no];
+      if (v !== '' && v != null && !Number.isNaN(+v)) s[b.no] = Math.min(4, Math.max(0, +v));
+      if (typeof data.catatan?.[b.no] === 'string') c[b.no] = data.catatan[b.no];
+    }
+    return paket(String(data.nama || n), s, c, !!data.normalisasi);
   }
 
   // Tautan berbagi: skor diurutkan sesuai urutan butir, dipisah "_", kosong = belum diisi.
@@ -129,6 +141,7 @@
       const aman = j === JSON.stringify({ ...skor }) || simpanan.some((x) => JSON.stringify(x.skor) === j);
       const cadangan = Object.keys(lama).length && !aman ? simpan(`Sebelum membuka tautan · ${waktu(Date.now())}`, lama) : null;
       nama = n;
+      idServer = null;
       info = `Skor dimuat dari tautan${n ? ` “${n}”` : ''}.` + (cadangan ? ` Skor Anda sebelumnya disimpan sebagai “${cadangan}”.` : '');
     });
     history.replaceState(null, '', location.pathname + location.search + href(jenjang.id, 'kalkulator'));
@@ -157,15 +170,18 @@
   }
 
   const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  function simpanFile() {
-    const n = namaBawaan();
-    const blob = new Blob([JSON.stringify(paket(n), null, 2)], { type: 'application/json' });
+  function unduhLam(data) {
+    const { id, dibuat, diperbarui, diunggah, ...isi } = data;
+    const blob = new Blob([JSON.stringify(isi, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `penilaian-${jenjang.id}-${slug(nama.trim()) || 'led'}.lam`;
+    a.download = `penilaian-${jenjang.id}-${slug(isi.nama || '') || 'led'}.lam`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    info = `Tersimpan ke file ${a.download}.`;
+    return a.download;
+  }
+  function simpanFile() {
+    info = `Tersimpan ke file ${unduhLam(paket(namaBawaan()))}.`;
   }
   async function bukaFile(e) {
     const el = e.currentTarget;
@@ -187,35 +203,163 @@
     }
   }
 
-  // Firebase: hanya setelah password dimasukkan
+  // Penyimpanan server: hanya setelah password dimasukkan
   let terbuka = $derived(!!rahasia.data);
-  let adaAwan = $derived(terbuka && !!konfigurasi()?.projectId);
-  let awan = $state(null);
-  let sibukAwan = $state(false);
-  async function kerjakanAwan(fn) {
-    sibukAwan = true;
+  let adaServer = $derived(terbuka && !!srv.konfigurasi()?.projectId);
+  let daftarServer = $state(null);
+  let sibuk = $state(false);
+  // Hasil server yang sedang dibuka di kalkulator, dan jejak isinya saat terakhir sinkron
+  let idServer = $state(null);
+  let jejakAsli = $state('');
+  let cari = $state('');
+  let urut = $state('waktu');
+  let pilih = $state({});
+  let ubahNama = $state(null);
+
+  const kanon = (o) => JSON.stringify(Object.keys(o).sort().map((k) => [k, o[k]]));
+  const jejak = () => [kanon(skor), kanon(salinCatatan(catatan)), normalisasi, nama.trim()].join('|');
+  let berubah = $derived(!!idServer && jejak() !== jejakAsli);
+  let namaServer = $derived(daftarServer?.find((x) => x.id === idServer)?.nama ?? nama);
+  function tandai(id) {
+    idServer = id;
+    jejakAsli = jejak();
+  }
+
+  let barisServer = $derived.by(() => {
+    if (!daftarServer) return [];
+    const q = cari.trim().toLowerCase();
+    const r = daftarServer
+      .filter((x) => !q || String(x.nama || '').toLowerCase().includes(q))
+      .map((x) => ({ x, h: hitung(jenjang, x.skor || {}, { normalisasi: !!x.normalisasi }) }));
+    if (urut === 'nama') r.sort((a, b) => String(a.x.nama || '').localeCompare(String(b.x.nama || ''), 'id'));
+    else if (urut === 'nilai') r.sort((a, b) => b.h.nilaiAkhir - a.h.nilaiAkhir);
+    return r;
+  });
+  let terpilih = $derived((daftarServer || []).filter((x) => pilih[x.id]));
+  let semuaTerpilih = $derived(barisServer.length > 0 && barisServer.every((r) => pilih[r.x.id]));
+
+  async function kerjakan(fn) {
+    if (sibuk) return;
+    sibuk = true;
     try {
       await fn();
     } catch (err) {
-      info = `Firebase: ${err?.message || err}`;
+      info = `Server: ${err?.message || err}`;
     }
-    sibukAwan = false;
+    sibuk = false;
   }
-  const muatDaftarAwan = () => kerjakanAwan(async () => (awan = await daftarAwan(jenjang.id)));
-  const unggahAwan = () =>
-    kerjakanAwan(async () => {
+  async function segarkan() {
+    const d = await srv.daftar(jenjang.id);
+    const ada = new Set(d.map((x) => x.id));
+    for (const k of Object.keys(pilih)) if (!ada.has(k)) delete pilih[k];
+    if (idServer && !ada.has(idServer)) idServer = null;
+    daftarServer = d;
+  }
+  // Daftar dimuat otomatis setelah password dimasukkan, dan dibersihkan lagi saat dikunci
+  $effect(() => {
+    const aktif = adaServer;
+    untrack(() => {
+      if (aktif) {
+        if (!daftarServer) kerjakan(segarkan);
+      } else {
+        daftarServer = null;
+        idServer = null;
+        pilih = {};
+      }
+    });
+  });
+
+  const unggahBaru = () =>
+    kerjakan(async () => {
       const n = namaBawaan();
-      await unggah(jenjang.id, paket(n));
+      const id = await srv.tambah(jenjang.id, paket(n));
       nama = n;
-      info = `Terunggah ke Firebase sebagai “${n}”.`;
-      awan = await daftarAwan(jenjang.id);
+      tandai(id);
+      info = `Tersimpan di server sebagai “${n}”.`;
+      await segarkan();
     });
-  const hapusDariAwan = (x) =>
-    confirm(`Hapus “${x.nama}” dari Firebase?`) &&
-    kerjakanAwan(async () => {
-      await hapusAwan(jenjang.id, x.id);
-      awan = awan.filter((y) => y.id !== x.id);
+  const simpanPerubahan = () =>
+    kerjakan(async () => {
+      const n = namaBawaan();
+      await srv.perbarui(jenjang.id, idServer, paket(n));
+      nama = n;
+      tandai(idServer);
+      info = `Perubahan “${n}” tersimpan di server.`;
+      await segarkan();
     });
+  function bukaServer(x) {
+    if (berubah && !confirm(`Perubahan pada “${namaServer}” belum disimpan ke server. Tetap buka “${x.nama}”?`)) return;
+    muat(x);
+    tandai(x.id);
+    info = `Dibuka dari server: “${x.nama}”.`;
+  }
+  function simpanNama() {
+    const u = ubahNama;
+    if (!u) return;
+    ubahNama = null;
+    const n = u.nilai.trim().slice(0, 200);
+    const x = daftarServer?.find((y) => y.id === u.id);
+    if (!n || !x || n === x.nama) return;
+    kerjakan(async () => {
+      await srv.gantiNama(jenjang.id, x.id, n);
+      if (x.id === idServer) {
+        const tadi = berubah;
+        nama = n;
+        if (!tadi) jejakAsli = jejak();
+      }
+      info = `“${x.nama}” diganti nama menjadi “${n}”.`;
+      await segarkan();
+    });
+  }
+  const duplikat = (x) =>
+    kerjakan(async () => {
+      const n = `${x.nama} (salinan)`.slice(0, 200);
+      await srv.tambah(jenjang.id, { ...x, nama: n });
+      info = `Salinan tersimpan sebagai “${n}”.`;
+      await segarkan();
+    });
+  function hapusServer(xs) {
+    if (!xs.length) return;
+    const t = xs.length === 1 ? `“${xs[0].nama}”` : `${xs.length} hasil penilaian`;
+    if (!confirm(`Hapus ${t} dari server? Tindakan ini tidak dapat dibatalkan.`)) return;
+    kerjakan(async () => {
+      await srv.hapus(jenjang.id, xs.map((x) => x.id));
+      if (xs.some((x) => x.id === idServer)) idServer = null;
+      info = `${t} dihapus dari server.`;
+      await segarkan();
+    });
+  }
+  function unggahFile(e) {
+    const el = e.currentTarget;
+    const berkas = [...el.files];
+    el.value = '';
+    if (!berkas.length) return;
+    kerjakan(async () => {
+      let ok = 0;
+      const gagal = [];
+      for (const f of berkas) {
+        let data;
+        try {
+          data = JSON.parse(await f.text());
+        } catch {
+          gagal.push(`${f.name} (bukan file .lam yang valid)`);
+          continue;
+        }
+        if (data.jenjang && data.jenjang !== jenjang.id) {
+          gagal.push(`${f.name} (untuk program ${data.jenjang})`);
+          continue;
+        }
+        try {
+          await srv.tambah(jenjang.id, paketDariFile(data.skor ? data : { skor: data }, f.name.replace(/\.(lam|json)$/i, '')));
+          ok++;
+        } catch (err) {
+          gagal.push(`${f.name} (${err.message})`);
+        }
+      }
+      info = (ok ? `${ok} file diunggah ke server.` : 'Tidak ada file yang diunggah.') + (gagal.length ? ` Gagal: ${gagal.join('; ')}.` : '');
+      if (ok) await segarkan();
+    });
+  }
 
   let mengekspor = $state(false);
   async function unduhXlsx() {
@@ -251,7 +395,7 @@
       <p class="muted small">
         Pilih skor 1–4 untuk setiap butir dan tulis catatan bila perlu. Nilai akhir = Σ(bobot × skor) ÷ 4. Skor dan
         catatan kerja tersimpan otomatis di peramban ini; simpan ke file <span class="mono">.lam</span> untuk dipindahkan
-        atau diarsipkan{#if terbuka}, atau unggah ke Firebase agar bisa dibuka anggota tim{/if}.
+        atau diarsipkan{#if terbuka}, atau unggah ke server agar bisa dibuka anggota tim{/if}.
       </p>
       <div class="simpan">
         <input type="text" placeholder="Nama perhitungan, mis. Simulasi target 2026" bind:value={nama} aria-label="Nama perhitungan" />
@@ -282,38 +426,103 @@
       <div class="berkas">
         <button class="btn" onclick={simpanFile} title="Unduh skor, catatan, dan informasi penilaian sebagai file .lam">Simpan ke file .lam</button>
         <label class="btn" title="Muat skor dan catatan dari file .lam">Buka file .lam<input type="file" accept=".lam,application/json" onchange={bukaFile} hidden /></label>
-        {#if adaAwan}
-          <button class="btn primary" onclick={unggahAwan} disabled={sibukAwan} title="Unggah skor, catatan, dan informasi penilaian ke Firebase">{sibukAwan ? 'Memproses…' : 'Unggah ke Firebase'}</button>
-          <button class="btn" onclick={muatDaftarAwan} disabled={sibukAwan}>{awan ? 'Muat ulang daftar Firebase' : 'Lihat di Firebase'}</button>
-        {:else if terbuka}
-          <span class="small muted">Konfigurasi Firebase belum diatur, jadi unggah belum tersedia.</span>
-        {:else}
-          <span class="small muted">Masukkan password (ikon gembok) untuk mengunggah ke Firebase.</span>
+        {#if !adaServer}
+          <span class="small muted">
+            {terbuka ? 'Penyimpanan server belum diatur.' : 'Masukkan password (ikon gembok) untuk menyimpan dan mengelola hasil penilaian di server.'}
+          </span>
         {/if}
       </div>
-      {#if adaAwan && awan}
-        <details class="daftar" open>
-          <summary class="small">Tersimpan di Firebase ({awan.length})</summary>
-          {#if awan.length}
-            <table class="small">
-              <tbody>
-                {#each awan as x (x.id)}
-                  <tr class:aktif={x.nama === nama}>
-                    <td>{x.nama}</td>
-                    <td class="num mono">{fmt(hitung(jenjang, x.skor || {}).nilaiAkhir)}</td>
-                    <td class="muted">{waktu(x.waktu)}</td>
-                    <td class="num aksi">
-                      <button class="link" onclick={() => { muat(x); info = `Dimuat dari Firebase: “${x.nama}”.`; }}>Muat</button>
-                      <button class="link hapus" onclick={() => hapusDariAwan(x)}>Hapus</button>
-                    </td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          {:else}
-            <p class="small muted">Belum ada penilaian yang diunggah untuk program {jenjang.nama}.</p>
+      {#if adaServer}
+        <section class="server card" aria-label="Hasil penilaian di server">
+          <div class="sv-head">
+            <h3>Hasil penilaian di server</h3>
+            <span class="small muted">{daftarServer ? `${daftarServer.length} tersimpan` : 'Memuat…'}</span>
+            <span class="sp"></span>
+            <button class="btn" onclick={() => kerjakan(segarkan)} disabled={sibuk} title="Muat ulang daftar dari server">↻ Muat ulang</button>
+          </div>
+          <div class="sv-aksi">
+            {#if idServer}
+              <button class="btn primary" onclick={simpanPerubahan} disabled={sibuk || !berubah} title="Timpa “{namaServer}” di server dengan skor dan catatan saat ini">Simpan perubahan</button>
+              <button class="btn" onclick={unggahBaru} disabled={sibuk} title="Unggah sebagai hasil baru, yang lama tetap ada">Simpan sebagai baru</button>
+            {:else}
+              <button class="btn primary" onclick={unggahBaru} disabled={sibuk} title="Unggah skor, catatan, dan informasi penilaian saat ini">Unggah ke server</button>
+            {/if}
+            <label class="btn" class:mati={sibuk} title="Unggah satu atau beberapa file .lam sekaligus">
+              Unggah file .lam…<input type="file" accept=".lam,application/json" multiple onchange={unggahFile} disabled={sibuk} hidden />
+            </label>
+            {#if sibuk}<span class="small muted">Memproses…</span>{/if}
+          </div>
+          {#if idServer}
+            <p class="sinkron small" class:belum={berubah}>
+              {#if berubah}● Ada perubahan pada “{namaServer}” yang belum disimpan ke server.
+              {:else}✓ Sedang membuka “{namaServer}” dari server; belum ada perubahan.{/if}
+            </p>
           {/if}
-        </details>
+          {#if daftarServer?.length}
+            <div class="sv-alat">
+              <input type="search" placeholder="Cari nama…" bind:value={cari} aria-label="Cari hasil penilaian" />
+              <select bind:value={urut} aria-label="Urutkan">
+                <option value="waktu">Terbaru</option>
+                <option value="nama">Nama (A–Z)</option>
+                <option value="nilai">Nilai tertinggi</option>
+              </select>
+              {#if terpilih.length}
+                <button class="btn bahaya" onclick={() => hapusServer(terpilih)} disabled={sibuk}>Hapus terpilih ({terpilih.length})</button>
+                <button class="link" onclick={() => (pilih = {})}>Batal pilih</button>
+              {/if}
+            </div>
+            <div class="table-wrap">
+              <table class="sv small">
+                <thead>
+                  <tr>
+                    <th class="cek">
+                      <input
+                        type="checkbox" checked={semuaTerpilih} aria-label="Pilih semua"
+                        onchange={(e) => { for (const r of barisServer) pilih[r.x.id] = e.currentTarget.checked; }}
+                      />
+                    </th>
+                    <th>Nama</th><th class="num">Nilai</th><th class="st">Status</th><th class="num tr">Terisi</th><th class="wkt">Diperbarui</th><th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each barisServer as { x, h } (x.id)}
+                    <tr class:aktif={x.id === idServer} class:dipilih={pilih[x.id]}>
+                      <td class="cek"><input type="checkbox" bind:checked={pilih[x.id]} aria-label="Pilih {x.nama}" /></td>
+                      <td class="nm">
+                        {#if ubahNama?.id === x.id}
+                          <!-- svelte-ignore a11y_autofocus -->
+                          <input
+                            class="ganti" bind:value={ubahNama.nilai} maxlength="200" autofocus aria-label="Nama baru"
+                            onkeydown={(e) => { if (e.key === 'Enter') simpanNama(); else if (e.key === 'Escape') ubahNama = null; }}
+                            onblur={simpanNama}
+                          />
+                        {:else}
+                          <button class="nama" onclick={() => bukaServer(x)} title="Buka di kalkulator">{x.nama}</button>
+                          {#if x.id === idServer}<span class="tag">dibuka</span>{/if}
+                        {/if}
+                      </td>
+                      <td class="num mono">{fmt(h.nilaiAkhir)}</td>
+                      <td class="st"><span class="pill {h.status.kode}">{h.status.label}</span></td>
+                      <td class="num mono tr">{h.terisi}/{h.total}</td>
+                      <td class="muted wkt">{waktu(x.waktu)}</td>
+                      <td class="aksi">
+                        <button class="link" onclick={() => bukaServer(x)}>Buka</button>
+                        <button class="link" onclick={() => (ubahNama = { id: x.id, nilai: x.nama })}>Ganti nama</button>
+                        <button class="link" onclick={() => duplikat(x)} disabled={sibuk}>Duplikat</button>
+                        <button class="link" onclick={() => unduhLam(x)} title="Unduh sebagai file .lam">Unduh</button>
+                        <button class="link hapus" onclick={() => hapusServer([x])} disabled={sibuk}>Hapus</button>
+                      </td>
+                    </tr>
+                  {:else}
+                    <tr><td colspan="7" class="muted">Tidak ada yang cocok dengan “{cari}”.</td></tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+          {:else if daftarServer}
+            <p class="small muted">Belum ada hasil penilaian {jenjang.nama} di server. Isi skor lalu tekan <b>Unggah ke server</b>.</p>
+          {/if}
+        </section>
       {/if}
       <div class="actions">
         <span class="seg" role="group" aria-label="Tampilan">
@@ -329,7 +538,7 @@
         <span class="sp"></span>
         <button class="btn" onclick={() => isiSemua(3)}>Isi semua 3</button>
         <button class="btn" onclick={() => isiSemua(4)}>Isi semua 4</button>
-        <button class="btn" onclick={() => { if (Object.keys(catatan).length && !confirm('Kosongkan semua skor dan catatan?')) return; reset(); resetCatatan(); nama = ''; info = ''; }}>Kosongkan</button>
+        <button class="btn" onclick={() => { if (Object.keys(catatan).length && !confirm('Kosongkan semua skor dan catatan?')) return; reset(); resetCatatan(); nama = ''; info = ''; idServer = null; }}>Kosongkan</button>
         <button class="btn" onclick={unduhXlsx} disabled={mengekspor} title="Unduh hasil perhitungan sebagai file Excel">{mengekspor ? 'Menyiapkan…' : 'Ekspor Excel'}</button>
         <button class="btn" onclick={() => print()}>Cetak</button>
       </div>
@@ -556,6 +765,37 @@
   .ghead h3 { margin: 0; }
   .key { margin-left: 8px; color: var(--ok); border: 1px solid currentColor; padding: 0 5px; font-size: 0.75rem; border-radius: var(--radius); }
   .berkas { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; }
+  .server { margin-top: 14px; padding: 14px 16px; }
+  .sv-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+  .sv-head h3 { margin: 0; font-size: 1rem; }
+  .sv-head .btn { align-self: center; }
+  .sv-aksi, .sv-alat { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; }
+  .btn.mati { opacity: 0.5; pointer-events: none; }
+  .btn.bahaya { color: var(--danger); border-color: var(--danger); }
+  .sinkron { margin: 8px 0 0; color: var(--ok); }
+  .sinkron.belum { color: var(--p); font-weight: 600; }
+  .sv-alat input, .sv-alat select {
+    padding: 6px 9px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; font-size: 0.88rem;
+  }
+  .sv-alat input { flex: 1; min-width: 140px; }
+  .sv { margin-top: 8px; }
+  .sv th, .sv td { padding: 6px 8px; vertical-align: middle; }
+  .sv .cek { width: 28px; padding-right: 0; }
+  .sv tr.aktif td { background: var(--accent-soft); }
+  .sv tr.aktif td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+  .sv .nm { min-width: 160px; }
+  .nama { border: 0; background: none; padding: 0; cursor: pointer; color: var(--text); font: inherit; font-weight: 600; text-align: left; overflow-wrap: anywhere; }
+  .nama:hover { color: var(--link); text-decoration: underline; }
+  .ganti { width: 100%; padding: 4px 7px; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; }
+  .tag { margin-left: 6px; font-size: 0.72rem; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--on-accent); }
+  .sv .wkt { white-space: nowrap; }
+  .sv .aksi { width: 190px; line-height: 1.7; }
+  .sv .aksi .link { padding: 0 10px 0 0; white-space: nowrap; }
+  .link:disabled { opacity: 0.5; cursor: default; }
+  .pill { display: inline-block; font-size: 0.76rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.tidak { color: var(--danger); background: var(--danger-soft); }
+  .pill.terakreditasi { color: var(--p); background: var(--p-soft); }
+  .pill.unggul3, .pill.unggul5 { color: var(--o); background: var(--o-soft); }
   .bt { table-layout: fixed; font-size: 0.86rem; }
   .bt .c-kode { width: 58px; }
   .bt .c-el { width: 28%; }
@@ -654,6 +894,23 @@
     .sp { display: none; }
     .berkas .btn { flex: 1; justify-content: center; }
     .berkas span { flex-basis: 100%; }
+    .sv-aksi .btn { flex: 1; justify-content: center; }
+    .sv-alat input { flex-basis: 100%; }
+    /* Daftar server menjadi kartu bertumpuk */
+    .sv, .sv tbody, .sv tr, .sv td { display: block; }
+    .sv thead { display: none; }
+    .sv tr { display: grid; grid-template-columns: 28px 1fr auto; gap: 2px 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .sv td { padding: 0; border: 0; }
+    .sv tr.aktif { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+    .sv tr.aktif td { background: none; box-shadow: none; }
+    .sv .cek { grid-row: 1 / 3; padding-top: 2px; }
+    .sv .nm { min-width: 0; }
+    .sv .st, .sv .wkt { grid-column: 2 / -1; }
+    .sv .st { grid-row: 2; }
+    .sv .tr { display: none; }
+    .sv .wkt { font-size: 0.78rem; }
+    .sv .aksi { grid-column: 1 / -1; text-align: left; white-space: normal; display: flex; flex-wrap: wrap; gap: 4px 14px; padding-top: 4px; }
+    .sv .aksi .link { padding: 6px 0; }
     /* Tabel butir menjadi kartu bertumpuk */
     .bt, .bt tbody, .bt tr, .bt td { display: block; width: auto; }
     .bt thead, .bt colgroup { display: none; }
